@@ -1,16 +1,47 @@
 ---
-layout: default
+layout: none
 title: Henry Stanley
 ---
-
-<div id="home" style="margin-bottom: 4rem;">
-  {% include author.html %}
-
-  <div style="display: flex; justify-content: center;">
-    <iframe src="https://henryaj.substack.com/embed" width="480" height="250" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
-  </div>
-
-  <div style="padding-top: 5rem;">
-    <a href="/archive">View old posts →</a>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Henry Stanley</title>
+  <script data-goatcounter="https://henryaj.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  <style>
+    body {
+      font-family: monospace;
+      max-width: 480px;
+      margin: 80px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      color: #222;
+    }
+    h1 { font-size: 1.2em; margin-bottom: 0.2em; }
+    hr { border: none; border-top: 1px solid #ccc; margin: 1em 0; }
+    a { color: #222; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 0.4em 0; }
+  </style>
+</head>
+<body>
+  <h1>Henry Stanley</h1>
+  <hr>
+  <p>Founded <a href="https://usemast.com">Mast</a>. Formerly engineering at <a href="https://www.thoughtmachine.net/">Thought Machine</a>, Pivotal. Currently figuring it out.</p>
+  <ul>
+    <li><strong><a href="https://henryaj.substack.com">Substack</a></strong></li>
+    <li><a href="https://github.com/henryaj">GitHub</a></li>
+    <li><a href="https://instagram.com/henryaj">Instagram</a></li>
+    <li><a id="email" href="#">email</a></li>
+  </ul>
+  <script>
+    (function() {
+      var e = 'henry' + '@' + 'henrystanley' + '.' + 'com';
+      var a = document.getElementById('email');
+      a.href = 'mailto:' + e;
+      a.textContent = 'Email';
+    })();
+  </script>
+</body>
+</html>
