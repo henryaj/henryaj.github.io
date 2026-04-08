@@ -1,15 +1,33 @@
 # Blog / Personal Site
 
-Jekyll site deployed to GitHub Pages via GitHub Actions.
+Jekyll 4.2 site deployed to GitHub Pages via GitHub Actions. Ruby 3.4.
+
+## Local dev
+
+```
+bundle install
+bundle exec jekyll serve
+```
+
+## Structure
+
+- `index.html` — homepage, uses `layout: none` (self-contained HTML, no Jekyll templates)
+- `_layouts/` — `default.html`, `post.html`, `page.html` (used by blog posts and pages like `/now`)
+- `_posts/` — blog posts (permalink pattern: `/:title/`)
+- `_drafts/` — unpublished drafts
+- `_config.yml` — Jekyll config
+- `images/` — static images
+- `public/` — CSS/static assets for the blog layout (Lanyon theme)
+
+Old blog posts are still live at their URLs but not linked from the homepage.
 
 ## Design
 
 Minimal "tilde page" aesthetic — plain monospace HTML, no frameworks, no layout system.
 Dithered e-ink style headshot (ordered dither, o4x4 pattern via ImageMagick).
 
-The homepage (`index.html`) uses `layout: none` — it's self-contained HTML, no Jekyll templates.
-
-Old blog posts are still live at their URLs but not linked from the homepage.
+Blog posts use the Lanyon theme (`_layouts/default.html`) with Google Analytics (UA) and a nav bar.
+The homepage uses GoatCounter analytics instead.
 
 ## Dithering the headshot
 
@@ -23,9 +41,13 @@ Use `image-rendering: pixelated` in CSS and match the CSS display size to the so
 
 ## Deploy
 
-Push to `master` triggers GitHub Actions build. Repo: `henryaj/henryaj.github.io`.
-Remote uses SSH: `git@github.com:henryaj/henryaj.github.io.git`.
+Push to `master` triggers GitHub Actions build (`.github/workflows/jekyll-gh-pages.yml`).
+Repo: `henryaj/henryaj.github.io`. Remote uses SSH: `git@github.com:henryaj/henryaj.github.io.git`.
 
 ## Hosting
 
 Custom domain: `www.henrystanley.com` (CNAME file in repo root).
+
+## Plugins
+
+- `jekyll-redirect-from` — handles URL redirects for moved posts.
