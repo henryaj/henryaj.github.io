@@ -69,3 +69,28 @@ img.headshot {
 .masthead {
   border: none;
 }
+
+/* Substack content */
+.post img {
+  max-width: 100%;
+  height: auto;
+}
+
+.post figure {
+  margin: 1.5em 0;
+}
+
+.post figcaption {
+  font-size: 0.85em;
+  color: gray;
+  text-align: center;
+  margin-top: 0.5em;
+}
+
+.post .footnote {
+  font-size: 0.85em;
+  color: darkgray;
+  border-top: 1px solid #eee;
+  margin-top: 2em;
+  padding-top: 1em;
+}
