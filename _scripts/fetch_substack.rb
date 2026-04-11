@@ -133,7 +133,8 @@ unless xml.start_with?('<?xml') || xml.start_with?('<rss')
     title = content[/^title:\s*"(.+)"/, 1]
     date = content[/^date:\s*(\S+)/, 1]
     slug = File.basename(f, '.md').sub(/^\d{4}-\d{2}-\d{2}-/, '')
-    {title: title, url: "/#{slug}/", date: date}
+    short_date = Date.parse(date).strftime('%b %-d') rescue date
+    {title: title, url: "/#{slug}/", date: short_date}
   end
 
   File.write(DATA_FILE, JSON.pretty_generate(substack_posts.first(LIMIT)))
@@ -163,7 +164,7 @@ feed.items.each do |item|
     homepage_data << {
       title: item.title,
       url: local_url,
-      date: date
+      date: item.pubDate.strftime('%b %-d')
     }
   end
 
