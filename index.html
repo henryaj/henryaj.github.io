@@ -48,6 +48,13 @@ title: Henry Stanley
   </ul>
   <li><a href="/archive">All posts →</a></li>
   {% endif %}
+  <hr>
+  <form id="subscribe-form" style="margin: 0;">
+    <label for="email-input" style="font-size: 0.9em;">Get new posts by email:</label><br>
+    <input id="email-input" type="email" name="email" placeholder="you@example.com" required style="font-family: monospace; font-size: 1em; padding: 0.4em; border: 1px solid #ccc; width: 60%; margin-top: 0.4em;">
+    <button type="submit" style="font-family: monospace; font-size: 1em; padding: 0.4em 0.8em; border: 1px solid #ccc; background: none; cursor: pointer;">Subscribe</button>
+    <div id="subscribe-msg" style="font-size: 0.85em; margin-top: 0.4em;"></div>
+  </form>
   <script>
     (function() {
       var e = 'henry' + '@' + 'henrystanley' + '.' + 'com';
@@ -55,6 +62,38 @@ title: Henry Stanley
       a.href = 'mailto:' + e;
       a.textContent = 'Email';
     })();
+
+    document.getElementById('subscribe-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var msg = document.getElementById('subscribe-msg');
+      var btn = this.querySelector('button');
+      var email = document.getElementById('email-input').value;
+      btn.disabled = true;
+      btn.textContent = '...';
+      msg.textContent = '';
+      fetch('https://henryaj.substack.com/api/v1/free', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'email=' + encodeURIComponent(email)
+      }).then(function(r) {
+          if (r.ok || r.status === 302 || r.redirected) {
+            msg.style.color = '#222';
+            msg.textContent = 'Check your email to confirm.';
+            return;
+          }
+          return r.json().then(function(d) {
+            msg.style.color = '#a00';
+            var errs = d.errors;
+            msg.textContent = errs ? errs.map(function(e) { return e.msg; }).filter(function(v, i, a) { return a.indexOf(v) === i; }).join('. ') : 'Something went wrong.';
+          });
+        }).catch(function() {
+          msg.style.color = '#222';
+          msg.textContent = 'Check your email to confirm.';
+        }).finally(function() {
+          btn.disabled = false;
+          btn.textContent = 'Subscribe';
+        });
+    });
   </script>
 </body>
 </html>
