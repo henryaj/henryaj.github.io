@@ -10,7 +10,7 @@ layout: default
   <div class="meta">
     {{ page.date | date_to_string }}
     {% if page.canonical_url %}
-    · <a href="{{ page.canonical_url }}">Read on Substack</a>
+    · <a href="{{ page.canonical_url }}" target="_blank" rel="noopener">Read on Substack</a>
     {% endif %}
     {% if stats %}
       {% if stats.reaction_count > 0 %}
