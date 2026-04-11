@@ -107,7 +107,21 @@ xml = http_get(FEED_URL)
 
 # Verify we got XML, not a Cloudflare challenge page
 unless xml.start_with?('<?xml') || xml.start_with?('<rss')
-  warn "Warning: RSS feed returned non-XML response (likely blocked). Skipping sync."
+  warn "Warning: RSS feed returned non-XML response (likely blocked). Generating homepage data from existing posts."
+  FileUtils.mkdir_p(DATA_DIR)
+
+  # Build homepage data from committed substack posts
+  substack_posts = Dir.glob(File.join(POSTS_DIR, '*.md')).sort.reverse.filter_map do |f|
+    content = File.read(f)
+    next unless content.include?('source: substack')
+    title = content[/^title:\s*"(.+)"/, 1]
+    date = content[/^date:\s*(\S+)/, 1]
+    slug = File.basename(f, '.md').sub(/^\d{4}-\d{2}-\d{2}-/, '')
+    {title: title, url: "/#{slug}/", date: date}
+  end
+
+  File.write(DATA_FILE, JSON.pretty_generate(substack_posts.first(LIMIT)))
+  puts "Wrote #{[substack_posts.length, LIMIT].min} posts to homepage data from existing files"
   exit 0
 end
 
