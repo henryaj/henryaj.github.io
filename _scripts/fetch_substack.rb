@@ -80,15 +80,20 @@ def clean_html(html)
     %(<img src="#{src}" alt="#{alt}" loading="lazy">)
   end
 
-  # Convert inline footnote anchors to superscript
-  html = html.gsub(/<a class="footnote-anchor"[^>]*id="([^"]*)"[^>]*href="([^"]*)"[^>]*>\d+<\/a>/) do
-    %(<sup><a id="#{$1}" href="#{$2}">#{$1.sub('footnote-anchor-', '')}</a></sup>)
+  # Extract footnote content by number before modifying anchors
+  footnotes = {}
+  html.scan(/<div class="footnote"[^>]*>\s*<a [^>]*class="footnote-number"[^>]*>(\d+)<\/a>\s*<div class="footnote-content">(.*?)<\/div>\s*<\/div>/m) do
+    footnotes[$1] = $2.strip
   end
 
-  # Convert footnote blocks: <div class="footnote" ...><a class="footnote-number">N</a><div class="footnote-content">...</div></div>
-  # into: <div class="footnote"><strong>N.</strong> ...</div>
-  html = html.gsub(/<div class="footnote"[^>]*>\s*<a [^>]*class="footnote-number"[^>]*>(\d+)<\/a>\s*<div class="footnote-content">(.*?)<\/div>\s*<\/div>/m) do
-    %(<div class="footnote"><strong>#{$1}.</strong> #{$2.strip}</div>)
+  # Remove footnote blocks from the bottom
+  html = html.gsub(/<div class="footnote"[^>]*>\s*<a [^>]*class="footnote-number"[^>]*>\d+<\/a>\s*<div class="footnote-content">.*?<\/div>\s*<\/div>/m, '')
+
+  # Convert inline footnote anchors to sidenotes: inject content right after the anchor
+  html = html.gsub(/<a class="footnote-anchor"[^>]*id="([^"]*)"[^>]*href="([^"]*)"[^>]*>(\d+)<\/a>/) do
+    id, _href, num = $1, $2, $3
+    content = (footnotes[num] || '').gsub(/<\/?p>/, ' ').gsub(/<br\s*\/?>/, ' ').strip
+    %(<span class="sidenote-wrapper"><a href="#fn-#{num}" class="sidenote-toggle"><sup>#{num}</sup></a><span class="sidenote"><strong>#{num}.</strong> #{content}</span></span>)
   end
 
   # Remove Substack-specific div wrappers and data-component-name attrs
@@ -100,6 +105,16 @@ def clean_html(html)
   html = html.gsub(/<div>\s*<\/div>/, '')
   # Collapse multiple blank lines
   html = html.gsub(/\n{3,}/, "\n\n")
+
+  # Append mobile footnotes section at the bottom
+  unless footnotes.empty?
+    html += "\n\n<div class=\"mobile-footnotes\">\n<hr>\n"
+    footnotes.sort_by { |k, _| k.to_i }.each do |num, content|
+      clean_content = content.gsub(/<\/?p>/, ' ').gsub(/<br\s*\/?>/, ' ').strip
+      html += "<div class=\"mobile-footnote\" id=\"fn-#{num}\"><strong>#{num}.</strong> #{clean_content}</div>\n"
+    end
+    html += "</div>"
+  end
 
   html.strip
 end

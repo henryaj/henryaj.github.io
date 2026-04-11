@@ -44,6 +44,29 @@
     .stat-icon { width: 0.9em; height: 0.9em; vertical-align: -0.1em; }
     .post-stat { white-space: nowrap; }
     .footnote { font-size: 0.85em; color: #666; border-top: 1px solid #eee; margin-top: 2em; padding-top: 1em; }
+
+    /* Tufte-style sidenotes */
+    .sidenote-toggle { text-decoration: none; }
+    .sidenote-toggle sup { color: #222; }
+    .sidenote-wrapper { display: inline; }
+    .sidenote {
+      float: right;
+      clear: right;
+      width: 200px;
+      margin-right: -230px;
+      margin-bottom: 1em;
+      font-size: 0.75em;
+      line-height: 1.4;
+      color: #666;
+    }
+    .sidenote p { margin: 0; }
+    .mobile-footnotes { display: none; }
+    .mobile-footnote { font-size: 0.85em; color: #666; margin: 0.8em 0; }
+    /* On narrow screens, hide sidenotes, show bottom footnotes */
+    @media (max-width: 780px) {
+      .sidenote { display: none; }
+      .mobile-footnotes { display: block; }
+    }
   </style>
 </head>
 <body>
