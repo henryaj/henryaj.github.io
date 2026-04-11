@@ -5,11 +5,31 @@ require 'json'
 require 'fileutils'
 
 FEED_URL  = 'https://henryaj.substack.com/feed'
+API_URL   = 'https://henryaj.substack.com/api/v1/posts'
 REPO_ROOT = File.expand_path('..', __dir__)
 POSTS_DIR = File.join(REPO_ROOT, '_posts')
 DATA_DIR  = File.join(REPO_ROOT, '_data')
-DATA_FILE = File.join(DATA_DIR, 'substack.json')
-LIMIT     = 5
+DATA_FILE  = File.join(DATA_DIR, 'substack.json')
+STATS_FILE = File.join(DATA_DIR, 'substack_stats.json')
+LIMIT      = 5
+
+def fetch_api_metadata
+  uri = URI("#{API_URL}?limit=50")
+  response = Net::HTTP.get(uri)
+  posts = JSON.parse(response)
+
+  metadata = {}
+  posts.each do |post|
+    metadata[post['slug']] = {
+      comment_count: post['comment_count'] || 0,
+      reaction_count: post['reaction_count'] || 0
+    }
+  end
+  metadata
+rescue StandardError => e
+  warn "Warning: Could not fetch Substack API metadata: #{e.message}"
+  {}
+end
 
 def slug_from_url(url)
   # https://henryaj.substack.com/p/some-post-title -> some-post-title
@@ -69,6 +89,7 @@ end
 uri  = URI(FEED_URL)
 xml  = Net::HTTP.get(uri)
 feed = RSS::Parser.parse(xml)
+api_metadata = fetch_api_metadata
 
 FileUtils.mkdir_p(POSTS_DIR)
 FileUtils.mkdir_p(DATA_DIR)
@@ -120,4 +141,12 @@ feed.items.each do |item|
 end
 
 File.write(DATA_FILE, JSON.pretty_generate(homepage_data))
-puts "Synced #{new_count} new posts, #{homepage_data.length} in homepage data"
+
+# Write per-post stats keyed by slug (for use in post layout)
+stats = {}
+api_metadata.each do |slug, meta|
+  stats[slug] = { comment_count: meta[:comment_count], reaction_count: meta[:reaction_count] }
+end
+File.write(STATS_FILE, JSON.pretty_generate(stats))
+
+puts "Synced #{new_count} new posts, #{homepage_data.length} in homepage data, #{stats.length} post stats"

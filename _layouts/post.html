@@ -2,12 +2,23 @@
 layout: default
 ---
 
+{% assign post_slug = page.url | remove_first: "/" | replace: "/", "" %}
+{% assign stats = site.data.substack_stats[post_slug] %}
+
 <article>
   <h1>{{ page.title }}</h1>
   <div class="meta">
     {{ page.date | date_to_string }}
     {% if page.canonical_url %}
     · <a href="{{ page.canonical_url }}">Read on Substack</a>
+    {% endif %}
+    {% if stats %}
+      {% if stats.reaction_count > 0 %}
+      · <span class="post-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="stat-icon"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.837-2.12C3.8 12.573 2 10.328 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.828-1.8 5.073-3.63 6.6a22.045 22.045 0 01-3.999 2.802l-.019.01-.005.003h-.002a.723.723 0 01-.69 0l-.001-.001z"/></svg> {{ stats.reaction_count }}</span>
+      {% endif %}
+      {% if stats.comment_count > 0 %}
+      · <span class="post-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="stat-icon"><path fill-rule="evenodd" d="M2 5a3 3 0 013-3h10a3 3 0 013 3v6a3 3 0 01-3 3h-1.72l-3.6 3.28a.75.75 0 01-1.01 0L5.72 14H4a3 3 0 01-3-3V5zm3.5 2a.75.75 0 000 1.5h9a.75.75 0 000-1.5h-9zm0 3a.75.75 0 000 1.5h5a.75.75 0 000-1.5h-5z" clip-rule="evenodd"/></svg> {{ stats.comment_count }}</span>
+      {% endif %}
     {% endif %}
   </div>
 
