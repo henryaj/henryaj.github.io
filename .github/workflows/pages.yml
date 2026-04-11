@@ -4,6 +4,8 @@ on:
   push:
     branches: ["master"]
   workflow_dispatch:
+  schedule:
+    - cron: '0 8 * * *'
 
 permissions:
   contents: read
@@ -26,6 +28,9 @@ jobs:
         with:
           ruby-version: "3.4"
           bundler-cache: true
+
+      - name: Fetch Substack posts
+        run: ruby _scripts/fetch_substack.rb
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
