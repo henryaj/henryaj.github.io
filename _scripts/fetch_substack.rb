@@ -12,11 +12,28 @@ DATA_DIR  = File.join(REPO_ROOT, '_data')
 DATA_FILE  = File.join(DATA_DIR, 'substack.json')
 STATS_FILE = File.join(DATA_DIR, 'substack_stats.json')
 LIMIT      = 5
+USER_AGENT = 'Mozilla/5.0 (compatible; JekyllBuild/1.0)'
+
+def http_get(url)
+  uri = URI(url)
+  http = Net::HTTP.new(uri.host, uri.port)
+  http.use_ssl = true
+  req = Net::HTTP::Get.new(uri)
+  req['User-Agent'] = USER_AGENT
+  req['Accept'] = '*/*'
+  response = http.request(req)
+
+  # Follow redirects
+  if response.is_a?(Net::HTTPRedirection)
+    return http_get(response['location'])
+  end
+
+  response.body
+end
 
 def fetch_api_metadata
-  uri = URI("#{API_URL}?limit=50")
-  response = Net::HTTP.get(uri)
-  posts = JSON.parse(response)
+  body = http_get("#{API_URL}?limit=50")
+  posts = JSON.parse(body)
 
   metadata = {}
   posts.each do |post|
@@ -86,8 +103,14 @@ def clean_html(html)
   html.strip
 end
 
-uri  = URI(FEED_URL)
-xml  = Net::HTTP.get(uri)
+xml = http_get(FEED_URL)
+
+# Verify we got XML, not a Cloudflare challenge page
+unless xml.start_with?('<?xml') || xml.start_with?('<rss')
+  warn "Warning: RSS feed returned non-XML response (likely blocked). Skipping sync."
+  exit 0
+end
+
 feed = RSS::Parser.parse(xml)
 api_metadata = fetch_api_metadata
 
