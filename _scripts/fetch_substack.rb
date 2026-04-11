@@ -80,15 +80,16 @@ def clean_html(html)
     %(<img src="#{src}" alt="#{alt}" loading="lazy">)
   end
 
-  # Convert Substack footnotes to simpler markup
+  # Convert inline footnote anchors to superscript
   html = html.gsub(/<a class="footnote-anchor"[^>]*id="([^"]*)"[^>]*href="([^"]*)"[^>]*>\d+<\/a>/) do
     %(<sup><a id="#{$1}" href="#{$2}">#{$1.sub('footnote-anchor-', '')}</a></sup>)
   end
-  html = html.gsub(/<div class="footnote"[^>]*>/, '<div class="footnote">')
-  html = html.gsub(/<a [^>]*class="footnote-number"[^>]*>(\d+)<\/a>/) do
-    %(<strong>#{$1}.</strong> )
+
+  # Convert footnote blocks: <div class="footnote" ...><a class="footnote-number">N</a><div class="footnote-content">...</div></div>
+  # into: <div class="footnote"><strong>N.</strong> ...</div>
+  html = html.gsub(/<div class="footnote"[^>]*>\s*<a [^>]*class="footnote-number"[^>]*>(\d+)<\/a>\s*<div class="footnote-content">(.*?)<\/div>\s*<\/div>/m) do
+    %(<div class="footnote"><strong>#{$1}.</strong> #{$2.strip}</div>)
   end
-  html = html.gsub(/<div class="footnote-content">/, '')
 
   # Remove Substack-specific div wrappers and data-component-name attrs
   html = html.gsub(/ data-component-name="[^"]*"/, '')

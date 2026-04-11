@@ -23,4 +23,4 @@ source: substack
   <figcaption>Two packets of crisps and no drink. Right to jail</figcaption>
 </figure><p>In Germany, supermarkets are a <em>celebration</em>. Flashing signs, garishly illuminated seafood, people happily milling about the aisles buying square chocolate (&#8220;<a href="https://www.youtube.com/watch?v=-rQ4gJtAIos">square, practical, good</a>&#8221;).</p><p>This is a country with its priorities straight.</p><p><em>(Disclaimer: this post is a pre-print, pending formal review from the Shrimp Welfare Project censorship committee.)</em></p><figure>
   <img src="https://substackcdn.com/image/fetch/$s_!2tVb!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6881a9c6-17a8-4675-807a-c51870bdf0da_1376x768.jpeg" alt="" loading="lazy">
-</figure><div class="footnote"><strong>1.</strong> <p><em>Thanks to Skaiste Anuzyte for recording a video of party REWE for me!</em></p></div></div>
+</figure><div class="footnote"><strong>1.</strong> <p><em>Thanks to Skaiste Anuzyte for recording a video of party REWE for me!</em></p></div>
