@@ -40,7 +40,7 @@ title: Henry Stanley
   </ul>
   {% if site.data.substack %}
   <hr>
-  <h2 style="font-size: 1.1em; margin: 0.6em 0 0.2em;">Recent writing</h2>
+  <h2 style="font-size: 1.1em; margin: 0.6em 0 0.2em;">Recent writing <small>on <a href="https://henryaj.substack.com">Substack</a></small></h2>
   <ul>
     {% for post in site.data.substack %}
     <li><a href="{{ post.url }}">{{ post.title }}</a> <small>({{ post.date }})</small></li>
