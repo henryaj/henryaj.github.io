@@ -25,6 +25,13 @@ title: Henry Stanley
     a { color: #222; }
     ul { list-style: none; padding: 0; }
     li { margin: 0.4em 0; }
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin: 0.8em 0; }
+    .project-card { text-decoration: none; color: #222; display: block; }
+    .project-card .project-img { width: 100%; aspect-ratio: 4/1; border-radius: 6px; border: 1px solid #ccc; overflow: hidden; }
+    .project-card img { width: 100%; transform: scale(1.3); transform-origin: top center; display: block; }
+    .project-card .project-name { font-weight: bold; margin-top: 0.3em; font-size: 0.95em; }
+    .project-card .project-desc { font-size: 0.8em; color: #555; }
+    @media (max-width: 400px) { .projects-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -48,6 +55,45 @@ title: Henry Stanley
   </ul>
   <li><a href="/archive">All posts →</a></li>
   {% endif %}
+  <hr>
+  <h2 style="font-size: 1.1em; margin: 0.6em 0 0.2em;">Projects</h2>
+  <div class="projects-grid">
+    <a class="project-card" target="_blank" href="https://www.flockwith.me/">
+      <div class="project-img"><img src="/images/project-flock.png" alt="Flock"></div>
+      <div class="project-name">Flock</div>
+      <div class="project-desc">Social todos</div>
+    </a>
+    <a class="project-card" target="_blank" href="https://medtrack.blmc.dev/">
+      <div class="project-img"><img src="/images/project-medtrack.png" alt="Medtrack"></div>
+      <div class="project-name">Medtrack</div>
+      <div class="project-desc">Track medication and symptoms</div>
+    </a>
+    <a class="project-card" target="_blank" href="https://autoclaude.blmc.dev/">
+      <div class="project-img"><img src="/images/project-autoclaude.png" alt="Autoclaude"></div>
+      <div class="project-name">Autoclaude</div>
+      <div class="project-desc">Resumes Claude Code after rate limits</div>
+    </a>
+<a class="project-card" target="_blank" href="https://retreatsfyi.blmc.dev/">
+      <div class="project-img"><img src="/images/project-retreatsfyi.png" alt="retreats.fyi"></div>
+      <div class="project-name">retreats.fyi</div>
+      <div class="project-desc">Find meditation retreats</div>
+    </a>
+    <a class="project-card" target="_blank" href="https://journalizer.blmc.dev/">
+      <div class="project-img"><img src="/images/project-journalizer.png" alt="Journalizer"></div>
+      <div class="project-name">Journalizer</div>
+      <div class="project-desc">Digitize handwritten journals</div>
+    </a>
+    <a class="project-card" target="_blank" href="https://industrialist.blmc.dev/">
+      <div class="project-img"><img src="/images/project-industrialist.png" alt="Industrialist's Handbook"></div>
+      <div class="project-name">Industrialist's Handbook</div>
+      <div class="project-desc">How to live better through chemistry</div>
+    </a>
+    <a class="project-card" target="_blank" href="#">
+      <div class="project-img"><img src="https://placecats.com/bella/301/200" alt="???"></div>
+      <div class="project-name">???</div>
+      <div class="project-desc">&nbsp;</div>
+    </a>
+  </div>
   <hr>
   <p style="font-size: 0.9em;"><a href="https://henryaj.substack.com/embed">Subscribe</a> to get new posts by email.</p>
   <script>
