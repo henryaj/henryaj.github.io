@@ -1,23 +1,43 @@
 {
-  "the-magnetisers": {
+  "dont-screw-the-crew": {
+    "comment_count": 2,
+    "reaction_count": 14
+  },
+  "youve-got-it": {
+    "comment_count": 0,
+    "reaction_count": 0
+  },
+  "the-time-i-almost-got-a-job-at-cea": {
     "comment_count": 1,
-    "reaction_count": 1
+    "reaction_count": 5
+  },
+  "weighing-animal-minds-part-ii": {
+    "comment_count": 0,
+    "reaction_count": 0
+  },
+  "claude-coding-apps-on-the-cheap": {
+    "comment_count": 0,
+    "reaction_count": 2
+  },
+  "the-magnetisers": {
+    "comment_count": 2,
+    "reaction_count": 2
   },
   "opinionated-advice-on-doing-inkhaven": {
-    "comment_count": 0,
-    "reaction_count": 4
+    "comment_count": 2,
+    "reaction_count": 11
   },
   "weird-and-wonderful-papers-ive-read": {
     "comment_count": 0,
-    "reaction_count": 1
+    "reaction_count": 3
   },
   "more-vibe-coding-at-inkhaven": {
     "comment_count": 0,
-    "reaction_count": 2
+    "reaction_count": 3
   },
   "anger-release": {
     "comment_count": 0,
-    "reaction_count": 2
+    "reaction_count": 3
   },
   "should-you-found-to-give": {
     "comment_count": 0,
@@ -41,7 +61,7 @@
   },
   "vibe-coding-at-inkhaven": {
     "comment_count": 0,
-    "reaction_count": 4
+    "reaction_count": 5
   },
   "getting-back-on-the-apps": {
     "comment_count": 5,
@@ -77,7 +97,7 @@
   },
   "no-more-inkslop": {
     "comment_count": 6,
-    "reaction_count": 27
+    "reaction_count": 28
   },
   "you-can-just-take-less-mounjaro": {
     "comment_count": 3,
@@ -105,7 +125,7 @@
   },
   "should-anyone-be-vegan": {
     "comment_count": 7,
-    "reaction_count": 15
+    "reaction_count": 16
   },
   "cult-of-rewe": {
     "comment_count": 1,
@@ -178,25 +198,5 @@
   "digital-gardens-as-a-service": {
     "comment_count": 0,
     "reaction_count": 4
-  },
-  "sunday-snippets-7": {
-    "comment_count": 0,
-    "reaction_count": 4
-  },
-  "sunday-snippets-6": {
-    "comment_count": 0,
-    "reaction_count": 2
-  },
-  "treating-male-pattern-baldness": {
-    "comment_count": 0,
-    "reaction_count": 3
-  },
-  "icp-002-2c-b": {
-    "comment_count": 0,
-    "reaction_count": 2
-  },
-  "sunday-snippets-5": {
-    "comment_count": 0,
-    "reaction_count": 0
   }
 }
