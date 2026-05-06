@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The connection puzzle"
-date: 2026-04-20
+date: 2026-04-20 02:35:06 +0000
 canonical_url: https://henryaj.substack.com/p/the-connection-puzzle
 source: substack
 ---

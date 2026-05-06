@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Talking to strangers: an app adventure"
-date: 2026-04-05
+date: 2026-04-05 02:47:49 +0000
 canonical_url: https://henryaj.substack.com/p/talking-to-strangers-an-app-adventure
 source: substack
 ---

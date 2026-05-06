@@ -7,6 +7,8 @@ url: "http://henrystanley.com"
 
 markdown: kramdown
 
+timezone: UTC
+
 paginate: 5
 
 gems:

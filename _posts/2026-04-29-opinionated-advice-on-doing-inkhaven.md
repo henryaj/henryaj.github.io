@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Opinionated advice on doing Inkhaven"
-date: 2026-04-29
+date: 2026-04-29 21:50:49 +0000
 canonical_url: https://henryaj.substack.com/p/opinionated-advice-on-doing-inkhaven
 source: substack
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Magnetisers"
-date: 2026-04-30
+date: 2026-04-30 01:53:03 +0000
 canonical_url: https://henryaj.substack.com/p/the-magnetisers
 source: substack
 ---

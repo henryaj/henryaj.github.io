@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Anger release"
-date: 2026-04-29
+date: 2026-04-29 02:43:10 +0000
 canonical_url: https://henryaj.substack.com/p/anger-release
 source: substack
 ---

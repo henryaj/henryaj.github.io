@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Cult of REWE"
-date: 2026-04-05
+date: 2026-04-05 20:19:07 +0000
 canonical_url: https://henryaj.substack.com/p/cult-of-rewe
 source: substack
 ---

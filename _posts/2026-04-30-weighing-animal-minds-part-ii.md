@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Weighing animal minds, part II"
-date: 2026-04-30
+date: 2026-04-30 03:45:36 +0000
 canonical_url: https://henryaj.substack.com/p/weighing-animal-minds-part-ii
 source: substack
 ---

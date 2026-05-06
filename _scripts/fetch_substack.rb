@@ -152,7 +152,8 @@ homepage_data = []
 new_count = 0
 
 feed.items.each do |item|
-  date = item.pubDate.strftime('%Y-%m-%d')
+  date = item.pubDate.utc.strftime('%Y-%m-%d')
+  datetime = item.pubDate.utc.strftime('%Y-%m-%d %H:%M:%S +0000')
   slug = slug_from_url(item.link)
   filename = "#{date}-#{slug}.md"
   filepath = File.join(POSTS_DIR, filename)
@@ -183,7 +184,7 @@ feed.items.each do |item|
     ---
     layout: post
     title: "#{safe_title}"
-    date: #{date}
+    date: #{datetime}
     canonical_url: #{item.link}
     source: substack
     ---

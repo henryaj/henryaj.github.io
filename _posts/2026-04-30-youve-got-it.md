@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "You've got it"
-date: 2026-04-30
+date: 2026-04-30 06:57:07 +0000
 canonical_url: https://henryaj.substack.com/p/youve-got-it
 source: substack
 ---

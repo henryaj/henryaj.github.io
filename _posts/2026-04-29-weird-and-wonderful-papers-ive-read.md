@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Weird and wonderful papers I've read"
-date: 2026-04-29
+date: 2026-04-29 20:58:11 +0000
 canonical_url: https://henryaj.substack.com/p/weird-and-wonderful-papers-ive-read
 source: substack
 ---

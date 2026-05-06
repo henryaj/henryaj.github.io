@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "You can just take less Mounjaro"
-date: 2026-04-12
+date: 2026-04-12 16:14:28 +0000
 canonical_url: https://henryaj.substack.com/p/you-can-just-take-less-mounjaro
 source: substack
 ---

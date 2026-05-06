@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Keep Thinking with Claude"
-date: 2026-04-12
+date: 2026-04-12 00:56:25 +0000
 canonical_url: https://henryaj.substack.com/p/keep-thinking-with-claude
 source: substack
 ---

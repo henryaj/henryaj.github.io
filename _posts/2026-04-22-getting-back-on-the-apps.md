@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Getting back on the apps"
-date: 2026-04-22
+date: 2026-04-22 00:53:09 +0000
 canonical_url: https://henryaj.substack.com/p/getting-back-on-the-apps
 source: substack
 ---

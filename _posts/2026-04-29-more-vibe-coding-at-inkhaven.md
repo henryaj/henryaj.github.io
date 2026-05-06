@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "More vibe coding at Inkhaven"
-date: 2026-04-29
+date: 2026-04-29 16:50:17 +0000
 canonical_url: https://henryaj.substack.com/p/more-vibe-coding-at-inkhaven
 source: substack
 ---
