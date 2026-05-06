@@ -32,15 +32,21 @@ def http_get(url)
 end
 
 def fetch_api_metadata
-  body = http_get("#{API_URL}?limit=50")
-  posts = JSON.parse(body)
-
   metadata = {}
-  posts.each do |post|
-    metadata[post['slug']] = {
-      comment_count: post['comment_count'] || 0,
-      reaction_count: post['reaction_count'] || 0
-    }
+  page_size = 50
+  offset = 0
+  loop do
+    body = http_get("#{API_URL}?limit=#{page_size}&offset=#{offset}")
+    posts = JSON.parse(body)
+    break if posts.empty?
+    posts.each do |post|
+      metadata[post['slug']] = {
+        comment_count: post['comment_count'] || 0,
+        reaction_count: post['reaction_count'] || 0
+      }
+    end
+    break if posts.length < page_size
+    offset += page_size
   end
   metadata
 rescue StandardError => e
