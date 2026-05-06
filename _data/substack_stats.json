@@ -1,7 +1,11 @@
 {
+  "post-inkhaven-post": {
+    "comment_count": 9,
+    "reaction_count": 16
+  },
   "dont-screw-the-crew": {
-    "comment_count": 2,
-    "reaction_count": 21
+    "comment_count": 3,
+    "reaction_count": 25
   },
   "youve-got-it": {
     "comment_count": 0,
@@ -12,7 +16,7 @@
     "reaction_count": 5
   },
   "weighing-animal-minds-part-ii": {
-    "comment_count": 0,
+    "comment_count": 1,
     "reaction_count": 0
   },
   "claude-coding-apps-on-the-cheap": {
@@ -89,7 +93,7 @@
   },
   "anatomy-of-a-breakup": {
     "comment_count": 1,
-    "reaction_count": 10
+    "reaction_count": 12
   },
   "semaglutidonomics": {
     "comment_count": 2,
@@ -97,7 +101,7 @@
   },
   "no-more-inkslop": {
     "comment_count": 6,
-    "reaction_count": 28
+    "reaction_count": 29
   },
   "you-can-just-take-less-mounjaro": {
     "comment_count": 3,
@@ -194,9 +198,5 @@
   "trading-performance-for-productivity": {
     "comment_count": 0,
     "reaction_count": 3
-  },
-  "digital-gardens-as-a-service": {
-    "comment_count": 0,
-    "reaction_count": 4
   }
 }

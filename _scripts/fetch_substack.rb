@@ -127,15 +127,17 @@ unless xml.start_with?('<?xml') || xml.start_with?('<rss')
   FileUtils.mkdir_p(DATA_DIR)
 
   # Build homepage data from committed substack posts
-  substack_posts = Dir.glob(File.join(POSTS_DIR, '*.md')).sort.reverse.filter_map do |f|
+  require 'time'
+  substack_posts = Dir.glob(File.join(POSTS_DIR, '*.md')).filter_map do |f|
     content = File.read(f)
     next unless content.include?('source: substack')
     title = content[/^title:\s*"(.+)"/, 1]
-    date = content[/^date:\s*(\S+)/, 1]
+    date_str = content[/^date:\s*(.+)$/, 1]&.strip
     slug = File.basename(f, '.md').sub(/^\d{4}-\d{2}-\d{2}-/, '')
-    short_date = Date.parse(date).strftime('%b %-d') rescue date
-    {title: title, url: "/#{slug}/", date: short_date}
-  end
+    parsed = Time.parse(date_str) rescue nil
+    short_date = parsed ? parsed.utc.strftime('%b %-d') : date_str
+    {title: title, url: "/#{slug}/", date: short_date, _sort: parsed || Time.at(0)}
+  end.sort_by { |p| p[:_sort] }.reverse.map { |p| p.reject { |k, _| k == :_sort } }
 
   File.write(DATA_FILE, JSON.pretty_generate(substack_posts.first(LIMIT)))
   puts "Wrote #{[substack_posts.length, LIMIT].min} posts to homepage data from existing files"
@@ -151,7 +153,7 @@ FileUtils.mkdir_p(DATA_DIR)
 homepage_data = []
 new_count = 0
 
-feed.items.each do |item|
+feed.items.sort_by { |item| item.pubDate }.reverse.each do |item|
   date = item.pubDate.utc.strftime('%Y-%m-%d')
   datetime = item.pubDate.utc.strftime('%Y-%m-%d %H:%M:%S +0000')
   slug = slug_from_url(item.link)
