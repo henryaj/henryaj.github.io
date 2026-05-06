@@ -3,10 +3,55 @@ layout: default
 title: All Posts
 ---
 
+<style>
+  .reader-favourites {
+    float: right;
+    clear: right;
+    width: 200px;
+    margin-right: -230px;
+    margin-top: 0.5em;
+    padding: 0.8em 1em;
+    background: #fff8e1;
+    border: 1px solid #f0d97a;
+    border-radius: 4px;
+    font-size: 0.8em;
+    line-height: 1.4;
+  }
+  .reader-favourites h4 {
+    margin: 0 0 0.6em;
+    font-size: 0.95em;
+    color: #6b5500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .reader-favourites ul { list-style: none; padding: 0; margin: 0; }
+  .reader-favourites li { margin: 0.5em 0; }
+  .reader-favourites a { color: #222; text-decoration: none; border-bottom: 1px dotted #aaa; }
+  .reader-favourites a:hover { border-bottom-style: solid; }
+  .reader-favourites .reactions { color: #8a6d00; white-space: nowrap; }
+  @media (max-width: 780px) {
+    .reader-favourites {
+      float: none;
+      width: auto;
+      margin: 1em 0;
+    }
+  }
+</style>
+
 <h1>All posts</h1>
 {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
 {% for year in posts_by_year %}
 <h2>{{ year.name }}</h2>
+{% if year.name == "2026" and site.data.reader_favourites.size > 0 %}
+<aside class="reader-favourites">
+  <h4>Reader favourites</h4>
+  <ul>
+    {% for fav in site.data.reader_favourites %}
+    <li><a href="{{ fav.url }}">{{ fav.title }}</a> <span class="reactions">♥ {{ fav.reaction_count }}</span></li>
+    {% endfor %}
+  </ul>
+</aside>
+{% endif %}
 {% assign posts_by_month = year.items | group_by_exp: "post", "post.date | date: '%B'" %}
 {% for month in posts_by_month %}
 <h3 style="font-size: 1em; margin: 0.8em 0 0.2em; color: #666;">{{ month.name }}</h3>

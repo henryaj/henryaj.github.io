@@ -9,9 +9,12 @@ API_URL   = 'https://henryaj.substack.com/api/v1/posts'
 REPO_ROOT = File.expand_path('..', __dir__)
 POSTS_DIR = File.join(REPO_ROOT, '_posts')
 DATA_DIR  = File.join(REPO_ROOT, '_data')
-DATA_FILE  = File.join(DATA_DIR, 'substack.json')
-STATS_FILE = File.join(DATA_DIR, 'substack_stats.json')
-LIMIT      = 5
+DATA_FILE      = File.join(DATA_DIR, 'substack.json')
+STATS_FILE     = File.join(DATA_DIR, 'substack_stats.json')
+FAVOURITES_FILE = File.join(DATA_DIR, 'reader_favourites.json')
+LIMIT          = 5
+FAVOURITES_YEAR = '2026'
+FAVOURITES_LIMIT = 5
 USER_AGENT = 'Mozilla/5.0 (compatible; JekyllBuild/1.0)'
 
 def http_get(url)
@@ -41,6 +44,8 @@ def fetch_api_metadata
     break if posts.empty?
     posts.each do |post|
       metadata[post['slug']] = {
+        title: post['title'],
+        post_date: post['post_date'],
         comment_count: post['comment_count'] || 0,
         reaction_count: post['reaction_count'] || 0
       }
@@ -212,4 +217,12 @@ api_metadata.each do |slug, meta|
 end
 File.write(STATS_FILE, JSON.pretty_generate(stats))
 
-puts "Synced #{new_count} new posts, #{homepage_data.length} in homepage data, #{stats.length} post stats"
+# Top reader favourites for the configured year, by reaction count
+favourites = api_metadata
+  .select { |_slug, meta| meta[:post_date].to_s.start_with?(FAVOURITES_YEAR) }
+  .sort_by { |_slug, meta| -meta[:reaction_count] }
+  .first(FAVOURITES_LIMIT)
+  .map { |slug, meta| { title: meta[:title], url: "/#{slug}/", reaction_count: meta[:reaction_count] } }
+File.write(FAVOURITES_FILE, JSON.pretty_generate(favourites))
+
+puts "Synced #{new_count} new posts, #{homepage_data.length} in homepage data, #{stats.length} post stats, #{favourites.length} favourites"
