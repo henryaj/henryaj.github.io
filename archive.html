@@ -36,9 +36,41 @@ title: All Posts
       margin: 1em 0;
     }
   }
+  .personal-picks {
+    margin: 1em 0 1.5em;
+    padding: 0.8em 1em;
+    background: #fce4ec;
+    border: 1px solid #f48fb1;
+    border-radius: 4px;
+    font-size: 0.9em;
+    line-height: 1.5;
+  }
+  .personal-picks h4 {
+    margin: 0 0 0.6em;
+    font-size: 0.95em;
+    color: #ad1457;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .personal-picks ul { list-style: none; padding: 0; margin: 0; }
+  .personal-picks li { margin: 0.4em 0; }
+  .personal-picks a { color: #222; text-decoration: none; border-bottom: 1px dotted #aaa; }
+  .personal-picks a:hover { border-bottom-style: solid; }
 </style>
 
 <h1>All posts</h1>
+{% if site.data.personal_picks.size > 0 %}
+<aside class="personal-picks">
+  <h4>My picks</h4>
+  <ul>
+    {% for pick in site.data.personal_picks %}
+    {% assign pick_slug = pick.url | remove_first: "/" | replace: "/", "" %}
+    {% assign pick_stats = site.data.substack_stats[pick_slug] %}
+    <li><a href="{{ pick.url }}">{{ pick.title }}</a>{% if pick_stats.reaction_count > 0 or pick_stats.comment_count > 0 %} <small>({% if pick_stats.reaction_count > 0 %}<span class="post-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="stat-icon"><path d="M9.653 16.915l-.005-.003-.019-.01a20.759 20.759 0 01-1.162-.682 22.045 22.045 0 01-2.837-2.12C3.8 12.573 2 10.328 2 7.5a4.5 4.5 0 018-2.828A4.5 4.5 0 0118 7.5c0 2.828-1.8 5.073-3.63 6.6a22.045 22.045 0 01-3.999 2.802l-.019.01-.005.003h-.002a.723.723 0 01-.69 0l-.001-.001z"/></svg> {{ pick_stats.reaction_count }}</span>{% endif %}{% if pick_stats.reaction_count > 0 and pick_stats.comment_count > 0 %} · {% endif %}{% if pick_stats.comment_count > 0 %}<span class="post-stat"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="stat-icon"><path fill-rule="evenodd" d="M2 5a3 3 0 013-3h10a3 3 0 013 3v6a3 3 0 01-3 3h-1.72l-3.6 3.28a.75.75 0 01-1.01 0L5.72 14H4a3 3 0 01-3-3V5zm3.5 2a.75.75 0 000 1.5h9a.75.75 0 000-1.5h-9zm0 3a.75.75 0 000 1.5h5a.75.75 0 000-1.5h-5z" clip-rule="evenodd"/></svg> {{ pick_stats.comment_count }}</span>{% endif %})</small>{% endif %}</li>
+    {% endfor %}
+  </ul>
+</aside>
+{% endif %}
 {% assign posts_by_year = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
 {% for year in posts_by_year %}
 <h2>{{ year.name }}</h2>
