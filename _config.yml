@@ -3,15 +3,13 @@ title: Henry Stanley
 email: &email henry@henrystanley.com
 
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://henrystanley.com"
+url: "https://www.henrystanley.com"
 
 markdown: kramdown
 
 timezone: UTC
 
-paginate: 5
-
-gems:
+plugins:
 - jekyll-redirect-from
 
 github:
@@ -21,7 +19,7 @@ github:
 # About/contact
 author:
   name:              Henry Stanley
-  url:               http://henrystanley.com
+  url:               https://www.henrystanley.com
   email:             *email
 
 permalink: /:title/
