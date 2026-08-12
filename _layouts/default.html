@@ -10,122 +10,13 @@
   <link rel="canonical" href="{{ page.canonical_url }}">
   {% endif %}
   <script data-goatcounter="https://henryaj.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.baseurl }}/feed.xml">
   <link rel="shortcut icon" href="{{ site.baseurl }}/public/favicon.ico">
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/ebgaramond-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/frutiger-67-boldcn.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/plexsans-400.woff2" crossorigin>
   <style>
-    /* Body + links. Latin-ext is a separate file so most visitors never fetch it. */
-    @font-face {
-      font-family: 'EB Garamond';
-      font-style: normal;
-      font-weight: 400 800;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/ebgaramond-latin.woff2) format('woff2');
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-                     U+2212, U+2215, U+FEFF, U+FFFD;
-    }
-    @font-face {
-      font-family: 'EB Garamond';
-      font-style: normal;
-      font-weight: 400 800;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/ebgaramond-latin-ext.woff2) format('woff2');
-      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-                     U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
-                     U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-    }
-    @font-face {
-      font-family: 'EB Garamond';
-      font-style: italic;
-      font-weight: 400 800;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/ebgaramond-italic-latin.woff2) format('woff2');
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-                     U+2212, U+2215, U+FEFF, U+FFFD;
-    }
-    @font-face {
-      font-family: 'EB Garamond';
-      font-style: italic;
-      font-weight: 400 800;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/ebgaramond-italic-latin-ext.woff2) format('woff2');
-      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-                     U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
-                     U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-    }
-    /* Headings */
-    @font-face {
-      font-family: 'Frutiger Cn';
-      font-style: normal;
-      font-weight: 700;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/frutiger-67-boldcn.woff2) format('woff2');
-    }
-    /* Nav + meta only. Pixel bitmap, and it renders all-caps — see note at .site-nav. */
-    @font-face {
-      font-family: 'Silkscreen';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/silkscreen.woff2) format('woff2');
-    }
-    /* Links. Same superfamily as the code face below, deliberately: both mark text
-       that does something rather than text that reads. */
-    @font-face {
-      font-family: 'Plex Sans';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/plexsans-400.woff2) format('woff2');
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193,
-                     U+2212, U+2215, U+FEFF, U+FFFD;
-    }
-    /* Code blocks */
-    @font-face {
-      font-family: 'Plex Mono';
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/plexmono-400.woff2) format('woff2');
-    }
-
-    :root {
-      --serif: 'EB Garamond', Garamond, Georgia, serif;
-      --display: 'Frutiger Cn', 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif;
-      --sans: 'Plex Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif;
-      --pixel: 'Silkscreen', ui-monospace, Menlo, monospace;
-      --mono: 'Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-      --ink: #222;
-      --quiet: #767676;
-      /* 5.6:1 on white, so it clears AA at the small end of the scale too.
-         Hover deepens into the fully saturated sapphire the accent is drawn from. */
-      --accent: #2665C5;
-      --accent-deep: #0F52BA;
-      /* Optical match, not a true ratio: Plex Sans' x-height runs well ahead of
-         Garamond's, so links only sit level in the line once they're set down
-         this far. Anything larger and they visibly bulge out of it. */
-      --link-size: 0.82em;
-      --rule: #ddd;
-      /* Measure and gutter are budgeted together: anything floated into the margin
-         uses --gutter-pull, and --gutter-min is the width below which it can't fit. */
-      --measure: 41rem;
-      --gutter-pull: -248px;
-      /* Minimum viewport that keeps a pulled float fully on screen:
-         measure - 2*padding + 2*pull = 656 - 40 + 496 = 1112. Rounded up for air.
-         Expressed in em so it tracks --measure when the reader's default font size
-         isn't 16px; the @media queries below must match — custom properties can't
-         be used there. Documentation only: nothing reads this token. */
-      --gutter-min: 70em;
-    }
-
-    /* border-box keeps --measure the element's full width, so the gutter arithmetic
-       below stays true. Without it the padding widens the body past the measure. */
-    *, *::before, *::after { box-sizing: border-box; }
+{% include typography.html %}
 
     body {
       font-family: var(--serif);
