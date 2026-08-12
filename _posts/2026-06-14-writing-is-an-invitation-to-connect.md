@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Writing is an invitation to connect"
+subtitle: "You should do it more"
 date: 2026-06-14 10:51:17 +0000
 canonical_url: https://henryaj.substack.com/p/writing-is-an-invitation-to-connect
 source: substack

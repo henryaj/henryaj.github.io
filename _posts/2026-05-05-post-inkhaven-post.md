@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Post-Inkhaven Post"
+subtitle: "A retrospective"
 date: 2026-05-05 00:17:46 +0000
 canonical_url: https://henryaj.substack.com/p/post-inkhaven-post
 source: substack

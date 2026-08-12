@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Writing is a flywheel"
+subtitle: "500 words a week will be easy, they said"
 date: 2026-06-28 18:06:45 +0000
 canonical_url: https://henryaj.substack.com/p/writing-is-a-flywheel
 source: substack

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Claude Coding apps on the cheap"
+subtitle: "Free tiers rule"
 date: 2026-04-30 03:00:15 +0000
 canonical_url: https://henryaj.substack.com/p/claude-coding-apps-on-the-cheap
 source: substack

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The weirdness of living alone"
+subtitle: "little boxes made of ticky tacky"
 date: 2026-07-12 21:39:51 +0000
 canonical_url: https://henryaj.substack.com/p/the-weirdness-of-living-alone
 source: substack

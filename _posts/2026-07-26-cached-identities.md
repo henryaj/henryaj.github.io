@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Cached identities"
+subtitle: "Against identity-based motivation"
 date: 2026-07-26 20:05:03 +0000
 canonical_url: https://henryaj.substack.com/p/cached-identities
 source: substack

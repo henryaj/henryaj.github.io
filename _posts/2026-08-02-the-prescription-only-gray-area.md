@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The \"prescription-only\" gray area"
+subtitle: "A love letter to United Pharmacies"
 date: 2026-08-02 10:00:13 +0000
 canonical_url: https://henryaj.substack.com/p/the-prescription-only-gray-area
 source: substack

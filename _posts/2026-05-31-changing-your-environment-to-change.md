@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Changing your environment to change your mind"
+subtitle: "Are you moving to a new place, or just escaping the old one"
 date: 2026-05-31 14:56:58 +0000
 canonical_url: https://henryaj.substack.com/p/changing-your-environment-to-change
 source: substack

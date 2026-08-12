@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "PSA: you should care about UV levels"
+subtitle: "They can be higher than you think!"
 date: 2026-05-17 21:55:02 +0000
 canonical_url: https://henryaj.substack.com/p/psa-you-should-care-about-uv-levels
 source: substack

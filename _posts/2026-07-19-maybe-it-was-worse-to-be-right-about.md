@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Maybe it was worse to be right about AI"
+subtitle: "When the prophecy is wrong-making"
 date: 2026-07-19 18:42:31 +0000
 canonical_url: https://henryaj.substack.com/p/maybe-it-was-worse-to-be-right-about
 source: substack

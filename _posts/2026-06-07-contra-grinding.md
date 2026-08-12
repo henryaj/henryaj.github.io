@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Contra grinding"
+subtitle: "You can just do things at a sustainable pace"
 date: 2026-06-07 20:57:00 +0000
 canonical_url: https://henryaj.substack.com/p/contra-grinding
 source: substack
