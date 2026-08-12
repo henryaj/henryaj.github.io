@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- The asterism that closes each post, drawn on the same pixel grid the
+       Silkscreen chrome sits on so it stays sharp at 16px. -->
+  <rect x="6" y="2" width="3" height="3" fill="#2665C5"/>
+  <rect x="2" y="9" width="3" height="3" fill="#2665C5"/>
+  <rect x="10" y="9" width="3" height="3" fill="#2665C5"/>
+</svg>
