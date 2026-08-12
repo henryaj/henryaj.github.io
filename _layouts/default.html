@@ -186,7 +186,10 @@
        the source case. Fine for these two short labels, destroys prose. */
     .site-nav, .meta {
       font-family: var(--pixel);
-      font-size: 10px;
+      /* Silkscreen's grid is 8px, so it stays sharp at even sizes and goes soft at
+         odd ones — 11px and 13px visibly blur. 16px is the crispest 2x multiple but
+         starts competing with h2. */
+      font-size: 14px;
       letter-spacing: 1px;
       -webkit-font-smoothing: none;
     }
