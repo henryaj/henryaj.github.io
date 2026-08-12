@@ -12,58 +12,220 @@
   <script data-goatcounter="https://henryaj.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
   <link rel="shortcut icon" href="{{ site.baseurl }}/public/favicon.ico">
+  <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/ebgaramond-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/frutiger-67-boldcn.woff2" crossorigin>
   <style>
-    body {
-      font-family: monospace;
-      max-width: 480px;
-      margin: 80px auto;
-      padding: 0 20px;
-      line-height: 1.6;
-      font-size: 1.1em;
-      color: #222;
+    /* Body + links. Latin-ext is a separate file so most visitors never fetch it. */
+    @font-face {
+      font-family: 'EB Garamond';
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/ebgaramond-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                     U+2212, U+2215, U+FEFF, U+FFFD;
     }
-    a { color: #222; }
-    h1 { font-size: 1.4em; margin: 0.6em 0 0.2em; }
-    h2 { font-size: 1.2em; margin: 1.5em 0 0.3em; }
-    h3 { font-size: 1.1em; margin: 1.2em 0 0.3em; }
-    hr { border: none; border-top: 1px solid #ccc; margin: 1em 0; }
+    @font-face {
+      font-family: 'EB Garamond';
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/ebgaramond-latin-ext.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+                     U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+                     U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    @font-face {
+      font-family: 'EB Garamond';
+      font-style: italic;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/ebgaramond-italic-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+                     U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    @font-face {
+      font-family: 'EB Garamond';
+      font-style: italic;
+      font-weight: 400 800;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/ebgaramond-italic-latin-ext.woff2) format('woff2');
+      unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+                     U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB,
+                     U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* Headings */
+    @font-face {
+      font-family: 'Frutiger Cn';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/frutiger-67-boldcn.woff2) format('woff2');
+    }
+    /* Nav + meta only. Pixel bitmap, and it renders all-caps — see note at .site-nav. */
+    @font-face {
+      font-family: 'Silkscreen';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/silkscreen.woff2) format('woff2');
+    }
+    /* Code blocks */
+    @font-face {
+      font-family: 'Plex Mono';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/plexmono-400.woff2) format('woff2');
+    }
+
+    :root {
+      --serif: 'EB Garamond', Garamond, Georgia, serif;
+      --display: 'Frutiger Cn', 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif;
+      --pixel: 'Silkscreen', ui-monospace, Menlo, monospace;
+      --mono: 'Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --ink: #222;
+      --quiet: #767676;
+      --rule: #ddd;
+      /* Measure and gutter are budgeted together: anything floated into the margin
+         uses --gutter-pull, and --gutter-min is the width below which it can't fit. */
+      --measure: 41rem;
+      --gutter-pull: -248px;
+      /* Minimum viewport that keeps a pulled float fully on screen:
+         measure - 2*padding + 2*pull = 656 - 40 + 496 = 1112. Rounded up for air.
+         Expressed in em so it tracks --measure when the reader's default font size
+         isn't 16px; the @media queries below must match — custom properties can't
+         be used there. Documentation only: nothing reads this token. */
+      --gutter-min: 70em;
+    }
+
+    /* border-box keeps --measure the element's full width, so the gutter arithmetic
+       below stays true. Without it the padding widens the body past the measure. */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: var(--serif);
+      max-width: var(--measure);
+      margin: 60px auto;
+      padding: 0 20px;
+      line-height: 1.55;
+      font-size: 1.25rem;
+      color: var(--ink);
+      /* Text figures. The EB Garamond subsets are built with --layout-features+=onum
+         specifically for this — Google's stock woff2 subsets strip it. */
+      font-variant-numeric: oldstyle-nums;
+      text-rendering: optimizeLegibility;
+    }
+    p { margin: 0 0 1em; }
+
+    /* Links stay in the text face; a hairline rule marks them without breaking the
+       line's rhythm. skip-ink (default) keeps the rule clear of descenders. */
+    a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: #b5b5b5;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.15em;
+    }
+    a:hover { text-decoration-color: var(--ink); }
+
+    h1 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 3.1rem;
+      line-height: 1.02;
+      letter-spacing: -0.01em;
+      margin: 0 0 0.12em;
+    }
+    h2 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.55rem;
+      line-height: 1.14;
+      margin: 2em 0 0.35em;
+    }
+    h3 {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      line-height: 1.2;
+      margin: 1.6em 0 0.3em;
+    }
+
+    hr { border: none; border-top: 1px solid var(--rule); margin: 2.2em 0; }
     img { max-width: 100%; height: auto; }
-    figure { margin: 1.5em 0; }
-    figcaption { font-size: 0.85em; color: #666; margin-top: 0.5em; }
+    figure { margin: 1.8em 0; }
+    /* The wider measure makes portrait-format images tall enough to push the opening
+       paragraph off-screen. Cap the height and centre what's left. */
+    figure img {
+      max-height: 78vh;
+      width: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    figcaption {
+      font-size: 0.78em;
+      font-style: italic;
+      color: var(--quiet);
+      margin-top: 0.6em;
+      line-height: 1.5;
+    }
     blockquote {
-      border-left: 3px solid #ccc;
-      margin: 1em 0;
-      padding: 0 1em;
+      border-left: 2px solid var(--rule);
+      margin: 1.4em 0;
+      padding: 0 1.2em;
       color: #555;
     }
-    pre, code { font-size: 0.9em; }
-    pre { overflow-x: auto; padding: 1em; background: #f5f5f5; }
-    .site-nav { font-size: 0.9em; margin-bottom: 2em; }
-    .site-nav a { margin-right: 1em; }
-    .meta { font-size: 0.85em; color: #666; margin: 0.3em 0 1.5em; }
-    .stat-icon { width: 0.9em; height: 0.9em; vertical-align: -0.1em; }
+    pre, code { font-family: var(--mono); font-size: 0.8em; }
+    pre { overflow-x: auto; padding: 1em; background: #f6f6f6; }
+
+    /* Silkscreen: pixel bitmap, so integer px only and no subpixel tracking, or it blurs.
+       a-z are mapped to capital forms, so anything set in it renders all-caps whatever
+       the source case. Fine for these two short labels, destroys prose. */
+    .site-nav, .meta {
+      font-family: var(--pixel);
+      font-size: 10px;
+      letter-spacing: 1px;
+      -webkit-font-smoothing: none;
+    }
+    .site-nav { margin-bottom: 3em; }
+    .site-nav a { margin-right: 1.6em; color: var(--quiet); text-decoration: none; }
+    .site-nav a:hover { color: var(--ink); }
+    .meta { color: var(--quiet); margin: 0.7em 0 2.2em; line-height: 1.8; }
+    .meta a { text-decoration-color: #bbb; }
+    .stat-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; }
     .post-stat { white-space: nowrap; }
-    .footnote { font-size: 0.85em; color: #666; border-top: 1px solid #eee; margin-top: 2em; padding-top: 1em; }
+
+    /* Apparatus stays in the text face — Silkscreen can't set running prose. */
+    .footnote {
+      font-size: 0.82em;
+      color: var(--quiet);
+      border-top: 1px solid #eee;
+      margin-top: 2.4em;
+      padding-top: 1em;
+    }
 
     /* Tufte-style sidenotes */
     .sidenote-toggle { text-decoration: none; }
-    .sidenote-toggle sup { color: #222; }
+    .sidenote-toggle sup { color: var(--ink); }
     .sidenote-wrapper { display: inline; }
     .sidenote {
       float: right;
       clear: right;
       width: 200px;
-      margin-right: -230px;
+      margin-right: var(--gutter-pull);
       margin-bottom: 1em;
-      font-size: 0.75em;
-      line-height: 1.4;
-      color: #666;
+      font-size: 0.72em;
+      line-height: 1.45;
+      color: var(--quiet);
     }
     .sidenote p { margin: 0; }
     .mobile-footnotes { display: none; }
-    .mobile-footnote { font-size: 0.85em; color: #666; margin: 0.8em 0; }
-    /* On narrow screens, hide sidenotes, show bottom footnotes */
-    @media (max-width: 780px) {
+    .mobile-footnote { font-size: 0.82em; color: var(--quiet); margin: 0.8em 0; }
+    /* Below --gutter-min the margin can't hold a sidenote, so fall back to endnotes. */
+    @media (max-width: 69.99em) {
       .sidenote { display: none; }
       .mobile-footnotes { display: block; }
     }
