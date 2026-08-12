@@ -186,8 +186,11 @@ unless xml.start_with?('<?xml') || xml.start_with?('<rss')
   substack_posts = Dir.glob(File.join(POSTS_DIR, '*.md')).filter_map do |f|
     content = File.read(f)
     next unless content.include?('source: substack')
-    title = content[/^title:\s*"(.+)"/, 1]
-    subtitle = content[/^subtitle:\s*"(.*)"/, 1]
+    # Both values were written as double-quoted YAML scalars, so an embedded quote
+    # is on disk as \". Pulling them back out with a regex rather than a YAML parser
+    # means undoing that by hand — otherwise the backslashes reach the homepage.
+    title = content[/^title:\s*"(.+)"/, 1]&.gsub('\\"', '"')
+    subtitle = content[/^subtitle:\s*"(.*)"/, 1]&.gsub('\\"', '"')
     date_str = content[/^date:\s*(.+)$/, 1]&.strip
     slug = File.basename(f, '.md').sub(/^\d{4}-\d{2}-\d{2}-/, '')
     parsed = Time.parse(date_str) rescue nil
