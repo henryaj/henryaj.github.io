@@ -128,6 +128,20 @@
     .stat-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; }
     .post-stat { white-space: nowrap; }
 
+    /* End mark. The asterism is one of the few ornaments EB Garamond actually draws —
+       the fleurons (U+2766/7) fall back to a system symbol font and render differently
+       on every platform. Decorative, so it's hidden from screen readers in the markup. */
+    .endmark {
+      text-align: center;
+      /* Garamond draws the asterism small inside its em box, so it needs a good deal
+         more size than a text mark would to carry at the foot of a page. */
+      font-size: 2.75rem;
+      line-height: 1;
+      color: #9a9a9a;
+      margin: 1.6em 0 0;
+      padding-bottom: 4.5rem;
+    }
+
     /* Apparatus stays in the text face — Silkscreen can't set running prose. */
     .footnote {
       font-size: 0.82em;
