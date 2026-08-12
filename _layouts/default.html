@@ -125,7 +125,10 @@
     .site-nav a { margin-right: 1.6em; color: var(--quiet); text-decoration: none; }
     .site-nav a:hover { color: var(--ink); }
     .meta { color: var(--quiet); margin: 0.7em 0 2.2em; line-height: 1.8; }
-    .stat-icon { width: 1.1em; height: 1.1em; vertical-align: -0.15em; }
+    /* Solid-fill icons next to Garamond's oldstyle figures: at anything near the
+       figures' own size they out-weigh them badly, so they're set well down and
+       dropped to the quiet grey rather than picking up the text's ink. */
+    .stat-icon { width: 0.78em; height: 0.78em; vertical-align: -0.04em; color: var(--quiet); }
     .post-stat { white-space: nowrap; }
 
     /* End mark. The asterism is one of the few ornaments EB Garamond actually draws —
