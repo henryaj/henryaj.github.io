@@ -64,7 +64,51 @@ def slug_from_url(url)
   url.split('/p/').last.split('?').first
 end
 
+# Remove the "reader-supported publication / Subscribe" CTA Substack appends to the
+# body, along with the <hr> separator it sometimes puts immediately before it.
+#
+# This can't be a gsub: the widget nests divs three deep and contains void <input>
+# tags, so a non-greedy /<div...>.*?<\/div>/ closes at the first </div> and leaves
+# orphaned markup behind. Track div depth to find the real closing tag.
+def strip_subscribe_widgets(html)
+  loop do
+    start = html.index(/<div[^>]*class="[^"]*subscription-widget[^"]*"/)
+    break unless start
+
+    depth = 0
+    i = start
+    finish = nil
+    while i < html.length
+      if html[i, 4] == '<div'
+        depth += 1
+        i += 4
+      elsif html[i, 6] == '</div>'
+        depth -= 1
+        i += 6
+        if depth.zero?
+          finish = i
+          break
+        end
+      else
+        i += 1
+      end
+    end
+    # Unbalanced markup: leave it alone rather than truncating the post.
+    break unless finish
+
+    preceding = html[0...start]
+    if (sep = preceding.match(/<div>\s*<hr>\s*<\/div>\s*\z/))
+      start = sep.begin(0)
+    end
+
+    html = html[0...start] + html[finish..]
+  end
+  html
+end
+
 def clean_html(html)
+  html = strip_subscribe_widgets(html)
+
   # Remove Substack image expand/restack button blocks entirely
   html = html.gsub(/<div class="image-link-expand">.*?<\/div>\s*<\/div>\s*<\/div>/m, '')
 
