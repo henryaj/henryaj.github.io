@@ -12,7 +12,7 @@ bundle exec jekyll serve
 ## Structure
 
 - `index.html` — homepage, uses `layout: none` (self-contained HTML, no Jekyll templates)
-- `_layouts/` — `default.html`, `post.html`, `page.html` (used by blog posts and pages like `/now`)
+- `_layouts/` — `default.html` and `post.html`; everything else is self-contained
 - `_posts/` — blog posts (permalink pattern: `/:title/`)
 - `_drafts/` — unpublished drafts
 - `_config.yml` — Jekyll config
@@ -20,10 +20,6 @@ bundle exec jekyll serve
 - `public/fonts/` — self-hosted woff2 subsets
 
 Old blog posts are still live at their URLs but not linked from the homepage.
-
-Dead weight, left in place but wired to nothing: `_includes/head.html`, `sidebar.html`
-and `author.html`, `_layouts/page.html`, and everything in `public/css/` (the old
-Lanyon theme). No layout includes `head.html`, so none of that CSS is ever loaded.
 
 ## Design
 
@@ -66,12 +62,24 @@ magick <source> -resize 180x180 -brightness-contrast -20x20 -colorspace Gray -or
 
 Use `image-rendering: pixelated` in CSS and match the CSS display size to the source size (currently 180px) to avoid moiré.
 
+## Substack sync
+
+`just sync` runs `_scripts/fetch_substack.rb`, which pulls the RSS feed, writes any new
+posts into `_posts/`, and regenerates `_data/substack.json` (the homepage's Writing
+list), `substack_stats.json` and `reader_favourites.json`. All of it is committed.
+
+Run it locally only — Substack blocks the feed from GitHub Actions IPs, so in CI the
+script silently fell through to its fallback branch, which rebuilds the index from post
+front matter by regex. That divergence caused real bugs, so CI no longer runs it at all
+and just builds what's in the repo.
+
+Post front matter carries `subtitle:` (the Substack subtitle, taken from the RSS
+`description`), which the homepage sets under each entry.
+
 ## Deploy
 
 Push to `master` triggers a GitHub Actions build (`.github/workflows/pages.yml`), which
-runs `_scripts/fetch_substack.rb` before `jekyll build` — `_data/substack.json` is
-gitignored and regenerated from the RSS feed on every deploy, so anything the homepage
-reads out of it has to be written by that script, not just committed locally.
+just runs `jekyll build` — no fetching, no commits, read-only token.
 Repo: `henryaj/henryaj.github.io`. Remote uses SSH: `git@github.com:henryaj/henryaj.github.io.git`.
 
 ## Hosting
