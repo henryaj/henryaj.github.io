@@ -4,59 +4,61 @@ title: All Posts
 ---
 
 <style>
+  /* Reader favourites ride in the sidenote gutter, so they're set like a sidenote:
+     no panel and no border, because the margin position is itself what marks them
+     as an aside. */
   .reader-favourites {
     float: right;
     clear: right;
     width: 200px;
     margin-right: var(--gutter-pull);
-    margin-top: 0.5em;
-    padding: 0.8em 1em;
-    background: #fff8e1;
-    border: 1px solid #f0d97a;
-    border-radius: 4px;
-    font-size: 0.8em;
-    line-height: 1.4;
+    margin-top: 0.6em;
+    font-size: 0.72em;
+    line-height: 1.45;
+    color: var(--quiet);
   }
-  .reader-favourites h4 {
-    margin: 0 0 0.6em;
-    font-size: 0.95em;
-    color: #6b5500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .reader-favourites ul { list-style: none; padding: 0; margin: 0; }
-  .reader-favourites li { margin: 0.5em 0; }
-  .reader-favourites a { color: #222; text-decoration: none; border-bottom: 1px dotted #aaa; }
-  .reader-favourites a:hover { border-bottom-style: solid; }
-  .reader-favourites .reactions { color: #8a6d00; white-space: nowrap; }
-  /* Matches --gutter-min in the layout: below this the margin can't hold the float. */
+  /* Matches --gutter-min in the layout: below this the margin can't hold the float,
+     so it drops into the column and needs a rule to stay legible as an aside. */
   @media (max-width: 69.99em) {
     .reader-favourites {
       float: none;
       width: auto;
-      margin: 1em 0;
+      margin: 1.8em 0;
+      border-top: 1px solid var(--rule);
+      padding-top: 0.8em;
     }
   }
+
+  /* My picks sits in the column rather than the margin, so it takes rules instead
+     of position to read as an aside. */
   .personal-picks {
-    margin: 1em 0 1.5em;
-    padding: 0.8em 1em;
-    background: #fce4ec;
-    border: 1px solid #f48fb1;
-    border-radius: 4px;
-    font-size: 0.9em;
+    margin: 1.4em 0 2em;
+    padding: 0.9em 0 1.1em;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.95em;
     line-height: 1.5;
   }
+
+  .reader-favourites h4,
   .personal-picks h4 {
-    margin: 0 0 0.6em;
-    font-size: 0.95em;
-    color: #ad1457;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-family: var(--pixel);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    -webkit-font-smoothing: none;
+    color: var(--ink);
+    margin: 0 0 0.7em;
   }
+  .reader-favourites ul,
   .personal-picks ul { list-style: none; padding: 0; margin: 0; }
-  .personal-picks li { margin: 0.4em 0; }
-  .personal-picks a { color: #222; text-decoration: none; border-bottom: 1px dotted #aaa; }
-  .personal-picks a:hover { border-bottom-style: solid; }
+  .reader-favourites li { margin: 0.55em 0; }
+  .personal-picks li { margin: 0.42em 0; }
+  /* --link-size is an em, so inside these already-reduced blocks it would compound
+     down past legibility. Same reason the layout exempts footnotes and captions. */
+  .reader-favourites a,
+  .personal-picks a { font-size: inherit; }
+  .reader-favourites .reactions { color: var(--quiet); white-space: nowrap; }
 
   /* Year, month and posts are a nesting, so the gaps should read as one: a month
      belongs to its posts and wants to sit near them, and away from the year above.
