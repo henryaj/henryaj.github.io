@@ -3,7 +3,6 @@ _site
 .jekyll-metadata
 .DS_Store
 .jekyll-cache
-_data/substack.json
 .playwright-mcp/
 archive-mobile.png
 archive-with-favourites.png
