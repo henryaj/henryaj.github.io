@@ -44,27 +44,38 @@ title: Henry Stanley
     }
     a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-    /* The portrait and the offsite links share the sidenote gutter — the same margin
-       a post's marginalia lives in, which is what ties this page to the ones it indexes.
-       Below --gutter-min the margin can't hold them, so the rail folds back inside
-       the measure and the links go from a stack to a row. */
+    /* The offsite links sit in the sidenote gutter — the same margin a post's
+       marginalia lives in, which is what ties this page to the ones it indexes.
+       Below --gutter-min the margin can't hold the float, so the rail folds back
+       inside the measure and the links go from a stack to a row. */
     .rail {
       float: right;
       clear: right;
       width: 180px;
       margin-right: var(--gutter-pull);
       margin-bottom: 1.4em;
+      /* Nudged down to start at the name's cap height rather than the top of its
+         line box, which sits higher than the letterforms do. */
+      margin-top: 0.7rem;
     }
-    .rail img { width: 180px; height: 180px; image-rendering: pixelated; display: block; }
-    .rail nav { margin-top: 1em; border-top: 1px solid var(--rule); padding-top: 0.6em; }
-    .rail nav a { display: block; font-family: var(--pixel); font-size: 14px; padding: 0.24em 0; }
+    .rail a { display: block; font-family: var(--pixel); font-size: 14px; padding: 0.24em 0; }
+    /* Reversed out of the accent — the only way white type is legible on this page,
+       and it makes the one link that asks something of the reader the one that looks
+       like a control rather than a destination. */
+    .rail .subscribe {
+      margin-top: 1.1em;
+      padding: 0.62em 0.5em;
+      background: var(--accent);
+      color: #fff;
+      text-align: center;
+    }
+    .rail .subscribe:hover { background: var(--accent-deep); color: #fff; text-decoration: none; }
     @media (max-width: 69.99em) {
       .rail { width: 132px; margin-right: 0; margin-left: 1.6em; }
-      .rail img { width: 132px; height: 132px; }
     }
     @media (max-width: 34em) {
-      .rail { float: none; width: auto; margin: 0 0 1.4em; }
-      .rail nav a { display: inline-block; margin-right: 1.3em; }
+      .rail { float: none; width: auto; margin: 0 0 1.6em; }
+      .rail a { display: inline-block; margin-right: 1.3em; }
     }
 
     .name {
@@ -110,20 +121,17 @@ title: Henry Stanley
     .card .d { font-size: 1.05rem; font-style: italic; color: var(--quiet); line-height: 1.3; }
     .card:hover .t { color: var(--accent-deep); }
 
-    .foot { margin-top: 2.4em; font-size: 1rem; color: var(--quiet); }
     @media (max-width: 34em) { .grid { grid-template-columns: 1fr; } .name { font-size: 3rem; } }
   </style>
 </head>
 <body>
-  <div class="rail">
-    <img src="/images/headshot-dithered.png" alt="Henry Stanley">
-    <nav>
-      <a href="https://henryaj.substack.com">Substack</a>
-      <a href="https://github.com/henryaj">GitHub</a>
-      <a href="https://instagram.com/henryaj">Instagram</a>
-      <a id="email" href="#">Email</a>
-    </nav>
-  </div>
+  <nav class="rail">
+    <a href="https://henryaj.substack.com">Substack</a>
+    <a href="https://github.com/henryaj">GitHub</a>
+    <a href="https://instagram.com/henryaj">Instagram</a>
+    <a id="email" href="#">Email</a>
+    <a class="subscribe" href="https://henryaj.substack.com/embed">Subscribe</a>
+  </nav>
 
   <h1 class="name">Henry Stanley</h1>
   <p class="strap">Vibe coding at Bloom Computing</p>
@@ -151,8 +159,6 @@ title: Henry Stanley
     <a class="card" target="_blank" rel="noopener" href="https://journalizer.blmc.dev/"><div class="shot"><img src="/images/project-journalizer.png" alt=""></div><div class="t">Journalizer</div><div class="d">Digitize handwritten journals</div></a>
     <a class="card" target="_blank" rel="noopener" href="https://industrialist.blmc.dev/"><div class="shot"><img src="/images/project-industrialist.png" alt=""></div><div class="t">Industrialist's Handbook</div><div class="d">How to live better through chemistry</div></a>
   </div>
-
-  <p class="foot"><a href="https://henryaj.substack.com/embed">Subscribe</a> to get new posts by email.</p>
 
   <script>
     (function() {
