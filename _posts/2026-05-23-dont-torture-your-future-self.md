@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Don't torture your future self"
+subtitle: "Your innie is a person too"
 date: 2026-05-23 09:35:57 +0000
 canonical_url: https://henryaj.substack.com/p/dont-torture-your-future-self
 source: substack

@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Frantically using Fable"
+subtitle: "Some suggestions for rinsing that token budget"
 date: 2026-07-05 12:07:25 +0000
 canonical_url: https://henryaj.substack.com/p/frantically-using-fable
 source: substack

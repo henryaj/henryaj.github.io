@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The sloppification of peptides"
+subtitle: "Nobody in the comments is real"
 date: 2026-08-09 09:46:52 +0000
 canonical_url: https://henryaj.substack.com/p/the-sloppification-of-peptides
 source: substack

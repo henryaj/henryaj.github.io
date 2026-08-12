@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Thoughts on building a better alcohol"
+subtitle: "Rational recreational drug design"
 date: 2026-06-21 15:49:43 +0000
 canonical_url: https://henryaj.substack.com/p/thoughts-on-building-a-better-alcohol
 source: substack

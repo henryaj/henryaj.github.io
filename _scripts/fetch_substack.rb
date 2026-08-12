@@ -187,11 +187,13 @@ unless xml.start_with?('<?xml') || xml.start_with?('<rss')
     content = File.read(f)
     next unless content.include?('source: substack')
     title = content[/^title:\s*"(.+)"/, 1]
+    subtitle = content[/^subtitle:\s*"(.*)"/, 1]
     date_str = content[/^date:\s*(.+)$/, 1]&.strip
     slug = File.basename(f, '.md').sub(/^\d{4}-\d{2}-\d{2}-/, '')
     parsed = Time.parse(date_str) rescue nil
     short_date = parsed ? parsed.utc.strftime('%b %-d') : date_str
-    {title: title, url: "/#{slug}/", date: short_date, _sort: parsed || Time.at(0)}
+    {title: title, url: "/#{slug}/", date: short_date, subtitle: subtitle.to_s,
+     _sort: parsed || Time.at(0)}
   end.sort_by { |p| p[:_sort] }.reverse.map { |p| p.reject { |k, _| k == :_sort } }
 
   File.write(DATA_FILE, JSON.pretty_generate(substack_posts.first(LIMIT)))
@@ -222,7 +224,8 @@ feed.items.sort_by { |item| item.pubDate }.reverse.each do |item|
     homepage_data << {
       title: item.title,
       url: local_url,
-      date: item.pubDate.strftime('%b %-d')
+      date: item.pubDate.strftime('%b %-d'),
+      subtitle: item.description.to_s.gsub(/\s+/, ' ').strip
     }
   end
 
@@ -236,11 +239,14 @@ feed.items.sort_by { |item| item.pubDate }.reverse.each do |item|
 
   # Escape YAML-unsafe characters in title
   safe_title = item.title.gsub('"', '\\"')
+  # The RSS description is the Substack subtitle; the homepage sets it under each entry.
+  safe_subtitle = item.description.to_s.gsub(/\s+/, ' ').strip.gsub('"', '\\"')
 
   frontmatter = <<~YAML
     ---
     layout: post
     title: "#{safe_title}"
+    subtitle: "#{safe_subtitle}"
     date: #{datetime}
     canonical_url: #{item.link}
     source: substack

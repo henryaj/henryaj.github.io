@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "The time I almost got a job at CEA"
+subtitle: "Sliding doors"
 date: 2026-04-30 06:36:14 +0000
 canonical_url: https://henryaj.substack.com/p/the-time-i-almost-got-a-job-at-cea
 source: substack
