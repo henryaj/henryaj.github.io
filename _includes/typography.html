@@ -6,8 +6,8 @@
       font-display: swap;
       src: url({{ site.baseurl }}/public/fonts/crimsonpro-latin.woff2) format('woff2');
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-                     U+2212, U+2215, U+FEFF, U+FFFD;
+                     U+0304, U+0308, U+0329, U+2000-2041, U+2043-206F, U+20AC, U+2122,
+                     U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
     @font-face {
       font-family: 'Crimson Pro';
@@ -26,8 +26,8 @@
       font-display: swap;
       src: url({{ site.baseurl }}/public/fonts/crimsonpro-italic-latin.woff2) format('woff2');
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-                     U+2212, U+2215, U+FEFF, U+FFFD;
+                     U+0304, U+0308, U+0329, U+2000-2041, U+2043-206F, U+20AC, U+2122,
+                     U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
     }
     @font-face {
       font-family: 'Crimson Pro';
@@ -55,22 +55,54 @@
       font-display: swap;
       src: url({{ site.baseurl }}/public/fonts/silkscreen.woff2) format('woff2');
     }
-    /* Links. Same superfamily as the code face below, deliberately: both mark text
-       that does something rather than text that reads. The subset is the variable
-       Plex Sans, so declaring the range costs no extra bytes — the same file that
-       was already serving 400 instances the 450 the links are set at. The range
-       runs to the axis maximum rather than stopping at 450: a declared range is
-       also what the browser clamps a bold request to, so stopping short would
-       leave <strong> inside a link rendering at 500 instead of bold. */
+    /* Links. Figtree, a geometric humanist, set at Medium. This was Plex Sans on
+       the argument that links should share a superfamily with the code face below —
+       both marking text that does something rather than text that reads. That
+       argument is spent: Figtree is here because of how it sits in a line of
+       Crimson Pro, not because of what it rhymes with.
+       The known trade is cap height. Figtree's capitals run about 8% over Crimson
+       Pro's, so links sit slightly proud in a line of capitalised proper nouns,
+       which is most of them on this site. Cap parity would want --link-size at
+       0.82em (0.5732 / 0.7), which costs more size than the links were meant to
+       give up, so the overshoot stays.
+       Built from the upstream variable TTF with the axis clipped to 400–700. The
+       range runs to the axis maximum rather than stopping at the link weight: a
+       declared range is what the browser clamps a bold request to, so stopping
+       short would leave <strong> inside a link rendering at 500 instead of bold. */
     @font-face {
-      font-family: 'Plex Sans';
+      font-family: 'Figtree';
       font-style: normal;
       font-weight: 400 700;
       font-display: swap;
-      src: url({{ site.baseurl }}/public/fonts/plexsans-400.woff2) format('woff2');
+      src: url({{ site.baseurl }}/public/fonts/figtree-latin.woff2) format('woff2');
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
                      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193,
                      U+2212, U+2215, U+FEFF, U+FFFD;
+    }
+    /* The asterism each post closes with. Crimson Pro has no U+2042 — nor did the
+       EB Garamond that preceded it, nor does upstream EB Garamond, so this mark
+       had always been left to whatever symbol font the platform supplied. Cardo
+       is a Bembo-derived old-style that draws a fine one at Crimson Pro's own
+       contrast, subset to that single codepoint. Declared into the Crimson Pro
+       family behind a unicode-range so it's only fetched by pages that use it,
+       which is post pages: 620 bytes, and never on the homepage. The two latin
+       faces above have U+2042 cut out of their ranges (U+2000-2041, U+2043-206F)
+       so this is the only face in the family that claims the codepoint: without
+       that, the italic face would win it in an italic context and draw nothing,
+       and the roman would be beaten only by declaration order.
+       block rather than swap: the endmark is sized for Cardo's proportions, so a
+       swap period would paint the platform fallback — which draws the mark larger
+       — at a size tuned for something else, then jump. Decorative and 620 bytes
+       same-origin, so a block period costs nothing worth having.
+       The weight range is declared over a static 400 face on purpose: it stops
+       <strong>⁂</strong> in post bodies from picking up synthetic bold. */
+    @font-face {
+      font-family: 'Crimson Pro';
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: block;
+      src: url({{ site.baseurl }}/public/fonts/cardo-asterism.woff2) format('woff2');
+      unicode-range: U+2042;
     }
     /* Code blocks */
     @font-face {
@@ -84,7 +116,7 @@
     :root {
       --serif: 'Crimson Pro', Garamond, Georgia, serif;
       --display: 'Frutiger Cn', 'Helvetica Neue Condensed', 'Arial Narrow', sans-serif;
-      --sans: 'Plex Sans', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      --sans: 'Figtree', -apple-system, 'Helvetica Neue', Arial, sans-serif;
       --pixel: 'Silkscreen', ui-monospace, Menlo, monospace;
       --mono: 'Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --ink: #222;
@@ -93,16 +125,16 @@
          Hover deepens into the fully saturated sapphire the accent is drawn from. */
       --accent: #2665C5;
       --accent-deep: #0F52BA;
-      /* Optical match, not a true ratio: Plex Sans' x-height runs ahead of the
-         text face's, so links only sit level in the line once they're set down.
-         0.887em is 17.7px against the 20px body. Crimson Pro's x-height is 0.42em
-         to Garamond's 0.40 and its caps are shorter, so the same number that ran
-         14% over x-height parity under Garamond now runs about 9% over on both
-         x-height and cap — a closer fit than the value was originally tuned for.
-         450 is Plex's Text weight: enough colour to hold at the reduced size
-         without reading as Medium beside the serif's regular. */
+      /* Optical match, not a true ratio: the sans x-height runs ahead of the text
+         face's, so links only sit level in the line once they're set down. 0.887em
+         is 17.7px against the 20px body. Figtree's x-height lands 5.6% over Crimson
+         Pro's at that size and its caps 8.4% over — near enough the same fit as the
+         Plex Sans this replaced, so the number did not need retuning for the swap.
+         500 is Medium: enough colour to hold at the reduced size, and a step up
+         from the 450 the links carried under Plex, which ran lighter at the same
+         nominal weight. */
       --link-size: 0.887em;
-      --link-weight: 450;
+      --link-weight: 500;
       --rule: #ddd;
       /* Measure and gutter are budgeted together: anything floated into the margin
          uses --gutter-pull, and --gutter-min is the width below which it can't fit. */

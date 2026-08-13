@@ -35,9 +35,14 @@ One type system, defined once in `_includes/typography.html` and included by bot
   sizes only (8px grid — 11px and 13px visibly blur) and no subpixel tracking.
   Renders everything as capitals whatever case the source is in, which makes it
   fine for short labels and useless for prose.
-- **IBM Plex Sans** — links. Set at `--link-size` in the `--accent` sapphire with
-  no underline; the change of face is what carries the link, so colour is never
-  the only cue. Underline returns on hover.
+- **Figtree** — links. Set at `--link-size` / `--link-weight` in the `--accent`
+  sapphire with no underline; the change of face is what carries the link, so
+  colour is never the only cue. Underline returns on hover. Subset from the
+  upstream variable TTF with the axis clipped to 400–700 — the range has to run
+  past the link weight or `<strong>` inside a link clamps instead of going bold.
+  Replaced IBM Plex Sans, which was chosen to rhyme with Plex Mono below; that
+  argument no longer holds, and Figtree's capitals run ~8% over Crimson Pro's
+  cap height, which is a known and accepted trade.
 - **IBM Plex Mono** — code
 
 The homepage and the post pages share a measure (`--measure`) and a gutter
@@ -45,11 +50,16 @@ The homepage and the post pages share a measure (`--measure`) and a gutter
 floats its offsite links into the same one. Below `--gutter-min` (70em) the margin
 can't hold a float and both fall back inside the measure.
 
-Each post closes with an asterism (U+2042). Note that no subset the site has
-ever shipped actually contains that glyph — not the old EB Garamond ones and not
-Crimson Pro, which has no U+2042 at all — so the mark is drawn by whatever symbol
-font the platform falls back to, and renders differently per platform. Same
-caveat as the fleurons U+2766/7. Worth fixing if the inconsistency ever shows.
+Each post closes with an asterism (U+2042). No text face the site has shipped
+draws one — not Crimson Pro, not the old EB Garamond subsets, and not upstream
+EB Garamond either — so for a long time the mark was left to whatever symbol font
+the reader's platform supplied, and looked different on every one. It now comes
+from a 620-byte single-glyph subset of Cardo (OFL, Bembo-derived, close enough to
+Crimson Pro's contrast to pass), declared into the `Crimson Pro` family behind
+`unicode-range: U+2042` so only post pages fetch it — with that codepoint cut out
+of the two latin faces' ranges, so nothing else in the family claims it. The fleurons U+2766/7 still
+have the original problem, in the unlikely event they come back — though upstream
+EB Garamond does draw those, if it comes to it.
 
 GoatCounter analytics on both the homepage and the post layout.
 

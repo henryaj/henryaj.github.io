@@ -15,7 +15,7 @@
   <link rel="alternate icon" href="{{ site.baseurl }}/favicon.ico">
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/crimsonpro-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/frutiger-67-boldcn.woff2" crossorigin>
-  <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/plexsans-400.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/figtree-latin.woff2" crossorigin>
   <style>
 {% include typography.html %}
 
@@ -34,7 +34,7 @@
     }
     p { margin: 0 0 1em; }
 
-    /* Links change face rather than carrying a rule: Plex Sans at the accent colour is
+    /* Links change face rather than carrying a rule: Figtree at the accent colour is
        legible as a link on letterform alone, which is what lets the underline go —
        colour is never the only cue (WCAG 1.4.1). The underline comes back on hover. */
     a {
@@ -56,10 +56,17 @@
     }
     /* Headings and chrome each set their own face; a link inside one keeps it. */
     h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, .site-nav a, .meta a { font-family: inherit; font-size: inherit; font-weight: inherit; }
-    /* --link-size is an em, so in contexts that are already set down it compounds:
-       0.887 of 0.72 is 0.64em, under 13px. Small print keeps the sans face but not
-       the second reduction. */
-    .footnote a, .mobile-footnote a, .sidenote a, figcaption a, .sidenote-toggle { font-size: inherit; }
+    /* Small print keeps the second reduction rather than opting out of it. --link-size
+       is a ratio, so it compounds to the same optical result at every size: 0.887 of a
+       sidenote's 14.4px is 12.8px, and Figtree's x-height at 12.8px matches the Crimson
+       Pro around it to the same 5.6% body links run. This rule used to exempt these
+       contexts, which left the sans at the serif's exact px size — where its much taller
+       x-height reads about 19% too big, which is what it looked like.
+       That exemption made sense when --link-size was 0.82em and compounding landed under
+       12px; at 0.887em it doesn't. If --link-size ever drops back (0.82em is the value
+       that would put Figtree's caps at parity), check this again — it is the same knob.
+       The toggle still inherits: it wraps a <sup>, which is already set down once. */
+    .sidenote-toggle { font-size: inherit; }
 
     h1 {
       font-family: var(--display);
@@ -133,15 +140,18 @@
     .stat-icon { width: 0.78em; height: 0.78em; vertical-align: -0.04em; color: var(--quiet); }
     .post-stat { white-space: nowrap; }
 
-    /* End mark. Neither the old Garamond subsets nor the Crimson Pro ones that
-       replaced them contain U+2042, so this has always been drawn by whatever
-       symbol font the platform falls back to — same caveat as the fleurons
-       (U+2766/7). Decorative, so it's hidden from screen readers in the markup. */
+    /* End mark. Crimson Pro has no U+2042, so the glyph comes from a 620-byte
+       Cardo subset grafted into the family behind a unicode-range — see
+       typography.html. Before that it was drawn by whatever symbol font the
+       platform supplied, which is still true of the fleurons (U+2766/7) if they
+       ever come back. Decorative, so it's hidden from screen readers in the markup. */
     .endmark {
       text-align: center;
-      /* The fallback faces draw the asterism small inside its em box, so it needs a
-         good deal more size than a text mark would to carry at the foot of a page. */
-      font-size: 2.75rem;
+      /* Cardo draws the asterism small inside its em box, so it needs a good deal
+         more size than a text mark would to carry at the foot of a page. 2.75rem was
+         tuned against a system fallback that drew it larger; at Cardo's proportions
+         that lands weedy. */
+      font-size: 3.5rem;
       line-height: 1;
       color: #9a9a9a;
       margin: 1.6em 0 0;
