@@ -26,8 +26,10 @@ Old blog posts are still live at their URLs but not linked from the homepage.
 One type system, defined once in `_includes/typography.html` and included by both
 `_layouts/default.html` and `index.html` — don't duplicate it into a third place.
 
-- **EB Garamond** — body copy, with oldstyle figures. The subsets are built with
-  `--layout-features+=onum`; Google's stock woff2 subsets strip it.
+- **Crimson Pro** — body copy, with oldstyle figures. The subsets are built from
+  the upstream variable TTFs with `--layout-features+=onum` and the weight axis
+  clipped to 400–800; Google's stock woff2 subsets strip `onum` entirely, so don't
+  pull those. Replaced EB Garamond, which went thin and grey on a bright screen.
 - **Frutiger 67 Bold Condensed** — headings, and the name on the homepage
 - **Silkscreen** — nav, meta lines, section labels. Pixel bitmap, so integer px
   sizes only (8px grid — 11px and 13px visibly blur) and no subpixel tracking.
@@ -43,11 +45,35 @@ The homepage and the post pages share a measure (`--measure`) and a gutter
 floats its offsite links into the same one. Below `--gutter-min` (70em) the margin
 can't hold a float and both fall back inside the measure.
 
-Each post closes with an asterism (U+2042). It's one of the few ornaments EB
-Garamond actually draws — the fleurons U+2766/7 fall back to a system symbol font
-and render differently per platform.
+Each post closes with an asterism (U+2042). Note that no subset the site has
+ever shipped actually contains that glyph — not the old EB Garamond ones and not
+Crimson Pro, which has no U+2042 at all — so the mark is drawn by whatever symbol
+font the platform falls back to, and renders differently per platform. Same
+caveat as the fleurons U+2766/7. Worth fixing if the inconsistency ever shows.
 
 GoatCounter analytics on both the homepage and the post layout.
+
+### Building the body-face subsets
+
+`public/fonts/crimsonpro-*.woff2` are built by hand from the upstream variable
+TTFs (`google/fonts/ofl/crimsonpro`), not downloaded from the Google Fonts CSS
+API — that API's files have `onum` stripped, which silently turns the whole site's
+figures into lining ones.
+
+```
+pip install fonttools brotli
+fonttools varLib.instancer "CrimsonPro[wght].ttf" wght=400:800 -o cp-400-800.ttf
+pyftsubset cp-400-800.ttf --output-file=public/fonts/crimsonpro-latin.woff2 \
+  --unicodes="<the latin range from typography.html>" \
+  --layout-features+=onum --flavor=woff2 --no-hinting
+```
+
+Four files, so the pair of commands above runs twice over two source faces:
+`CrimsonPro[wght].ttf` for the roman and `CrimsonPro-Italic[wght].ttf` for the
+italic, each subset once to the latin range and once to latin-ext. The unicode
+ranges are the ones declared in `_includes/typography.html`; keep the two in sync.
+Only the latin files come out carrying `onum` — latin-ext holds no digits, so
+pyftsubset drops the feature as unreachable. That's expected, not a failed build.
 
 ## The dithered headshot
 

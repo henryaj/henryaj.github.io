@@ -12,7 +12,7 @@ title: Henry Stanley
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/feed.xml">
   <link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
-  <link rel="preload" as="font" type="font/woff2" href="/public/fonts/ebgaramond-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="/public/fonts/crimsonpro-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/public/fonts/frutiger-67-boldcn.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="/public/fonts/plexsans-400.woff2" crossorigin>
   <style>
@@ -34,6 +34,7 @@ title: Henry Stanley
     a {
       font-family: var(--sans);
       font-size: var(--link-size);
+      font-weight: var(--link-weight);
       color: var(--accent);
       text-decoration: none;
     }
@@ -44,6 +45,9 @@ title: Henry Stanley
       text-underline-offset: 0.18em;
     }
     a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    /* The rail, the eyebrows and the cards each set their own face, so the link
+       weight doesn't follow them in — on .card it would reach the serif gloss. */
+    .rail a, .eyebrow a, .card { font-weight: 400; }
 
     /* The offsite links sit in the sidenote gutter — the same margin a post's
        marginalia lives in, which is what ties this page to the ones it indexes.

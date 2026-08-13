@@ -13,7 +13,7 @@
   <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.baseurl }}/feed.xml">
   <link rel="icon" type="image/svg+xml" href="{{ site.baseurl }}/public/favicon.svg">
   <link rel="alternate icon" href="{{ site.baseurl }}/favicon.ico">
-  <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/ebgaramond-latin.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/crimsonpro-latin.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/frutiger-67-boldcn.woff2" crossorigin>
   <link rel="preload" as="font" type="font/woff2" href="{{ site.baseurl }}/public/fonts/plexsans-400.woff2" crossorigin>
   <style>
@@ -27,7 +27,7 @@
       line-height: 1.55;
       font-size: 1.25rem;
       color: var(--ink);
-      /* Text figures. The EB Garamond subsets are built with --layout-features+=onum
+      /* Text figures. The Crimson Pro subsets are built with --layout-features+=onum
          specifically for this — Google's stock woff2 subsets strip it. */
       font-variant-numeric: oldstyle-nums;
       text-rendering: optimizeLegibility;
@@ -40,6 +40,7 @@
     a {
       font-family: var(--sans);
       font-size: var(--link-size);
+      font-weight: var(--link-weight);
       color: var(--accent);
       text-decoration: none;
     }
@@ -54,10 +55,10 @@
       outline-offset: 2px;
     }
     /* Headings and chrome each set their own face; a link inside one keeps it. */
-    h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, .site-nav a, .meta a { font-family: inherit; font-size: inherit; }
+    h1 a, h2 a, h3 a, h4 a, h5 a, h6 a, .site-nav a, .meta a { font-family: inherit; font-size: inherit; font-weight: inherit; }
     /* --link-size is an em, so in contexts that are already set down it compounds:
-       0.82 of 0.72 lands under 12px. Small print keeps the sans face but not the
-       second reduction. */
+       0.887 of 0.72 is 0.64em, under 13px. Small print keeps the sans face but not
+       the second reduction. */
     .footnote a, .mobile-footnote a, .sidenote a, figcaption a, .sidenote-toggle { font-size: inherit; }
 
     h1 {
@@ -126,19 +127,20 @@
     .site-nav a { margin-right: 1.6em; color: var(--quiet); text-decoration: none; }
     .site-nav a:hover { color: var(--ink); }
     .meta { color: var(--quiet); margin: 0.7em 0 2.2em; line-height: 1.8; }
-    /* Solid-fill icons next to Garamond's oldstyle figures: at anything near the
+    /* Solid-fill icons next to the oldstyle figures: at anything near the
        figures' own size they out-weigh them badly, so they're set well down and
        dropped to the quiet grey rather than picking up the text's ink. */
     .stat-icon { width: 0.78em; height: 0.78em; vertical-align: -0.04em; color: var(--quiet); }
     .post-stat { white-space: nowrap; }
 
-    /* End mark. The asterism is one of the few ornaments EB Garamond actually draws —
-       the fleurons (U+2766/7) fall back to a system symbol font and render differently
-       on every platform. Decorative, so it's hidden from screen readers in the markup. */
+    /* End mark. Neither the old Garamond subsets nor the Crimson Pro ones that
+       replaced them contain U+2042, so this has always been drawn by whatever
+       symbol font the platform falls back to — same caveat as the fleurons
+       (U+2766/7). Decorative, so it's hidden from screen readers in the markup. */
     .endmark {
       text-align: center;
-      /* Garamond draws the asterism small inside its em box, so it needs a good deal
-         more size than a text mark would to carry at the foot of a page. */
+      /* The fallback faces draw the asterism small inside its em box, so it needs a
+         good deal more size than a text mark would to carry at the foot of a page. */
       font-size: 2.75rem;
       line-height: 1;
       color: #9a9a9a;
