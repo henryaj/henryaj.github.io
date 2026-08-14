@@ -9,7 +9,7 @@
   {% if page.canonical_url %}
   <link rel="canonical" href="{{ page.canonical_url }}">
   {% endif %}
-  <script data-goatcounter="https://henryaj.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  {% include analytics.html %}
   <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.baseurl }}/feed.xml">
   <link rel="icon" type="image/svg+xml" href="{{ site.baseurl }}/public/favicon.svg">
   <link rel="alternate icon" href="{{ site.baseurl }}/favicon.ico">

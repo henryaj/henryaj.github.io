@@ -61,7 +61,8 @@ of the two latin faces' ranges, so nothing else in the family claims it. The fle
 have the original problem, in the unlikely event they come back — though upstream
 EB Garamond does draw those, if it comes to it.
 
-GoatCounter analytics on both the homepage and the post layout.
+GoatCounter and Plausible analytics, both in `_includes/analytics.html`, included by
+`index.html` and `_layouts/default.html`.
 
 ### Building the body-face subsets
 
