@@ -121,10 +121,11 @@
       --mono: 'Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --ink: #222;
       --quiet: #767676;
-      /* 5.6:1 on white, so it clears AA at the small end of the scale too.
-         Hover deepens into the fully saturated sapphire the accent is drawn from. */
-      --accent: #2665C5;
-      --accent-deep: #0F52BA;
+      /* 5.1:1 on white, so it clears AA at the small end of the scale too.
+         Hover deepens the same vermilion rather than shifting hue: 7.2:1, which
+         also keeps the underlined hover state legible against the resting colour. */
+      --accent: #C0442A;
+      --accent-deep: #9A3520;
       /* Optical match, not a true ratio: the sans x-height runs ahead of the text
          face's, so links only sit level in the line once they're set down. 0.887em
          is 17.7px against the 20px body. Figtree's x-height lands 5.6% over Crimson

@@ -36,7 +36,7 @@ One type system, defined once in `_includes/typography.html` and included by bot
   Renders everything as capitals whatever case the source is in, which makes it
   fine for short labels and useless for prose.
 - **Figtree** — links. Set at `--link-size` / `--link-weight` in the `--accent`
-  sapphire with no underline; the change of face is what carries the link, so
+  vermilion with no underline; the change of face is what carries the link, so
   colour is never the only cue. Underline returns on hover. Subset from the
   upstream variable TTF with the axis clipped to 400–700 — the range has to run
   past the link weight or `<strong>` inside a link clamps instead of going bold.
