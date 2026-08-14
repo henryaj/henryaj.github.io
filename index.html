@@ -91,7 +91,10 @@ title: Henry Stanley
       letter-spacing: -0.015em;
       margin: 0 0 0.14em;
     }
-    .strap, .eyebrow, .date { font-family: var(--pixel); font-size: 14px; letter-spacing: 1px; -webkit-font-smoothing: none; }
+    .strap, .eyebrow { font-family: var(--pixel); font-size: 14px; letter-spacing: 1px; -webkit-font-smoothing: none; }
+    /* Dates are read as data, not as a label, so they sit in the text face with
+       oldstyle figures rather than in the pixel font the section labels use. */
+    .date { font-family: var(--serif); font-size: 0.95rem; font-variant-numeric: oldstyle-nums; }
     .strap { color: var(--quiet); margin: 0 0 1.5em; }
     .eyebrow {
       color: var(--ink);
