@@ -118,6 +118,49 @@
       padding: 0 1.2em;
       color: #555;
     }
+
+    /* Substack embeds one of its posts inside another as a card of nested divs with
+       its own type ramp; none of that CSS exists here, so what arrived was a stack of
+       raw links with a 56px logo floating in it. The fetch script now rewrites those
+       embeds — and the digest, gallery, tweet and video ones, which shipped as empty
+       divs and rendered as nothing at all — into the markup below.
+       Same left rule as a blockquote: quoting someone and pointing at their post are
+       the same gesture, and the site already has a mark for it. */
+    .post-embed {
+      display: block;
+      border-left: 2px solid var(--rule);
+      margin: 1.6em 0;
+      padding: 0.15em 1.2em;
+    }
+    /* The title is the only thing to click, so it gets the line to itself rather than
+       sitting inline where it would read as one link among several — which is exactly
+       what the unstyled card looked like. */
+    .post-embed-title { display: block; line-height: 1.3; }
+    .post-embed-excerpt {
+      margin: 0.3em 0 0.4em;
+      font-size: 0.88em;
+      color: #555;
+    }
+    /* Same pixel face as the post's own meta line, one step down: this is apparatus
+       about someone else's post, so it shouldn't out-weigh the page's own byline.
+       12px keeps to Silkscreen's 8px grid — 11px and 13px blur. */
+    .post-embed-meta {
+      font-family: var(--pixel);
+      font-size: 12px;
+      letter-spacing: 1px;
+      -webkit-font-smoothing: none;
+      color: var(--quiet);
+      line-height: 1.7;
+    }
+    /* Line breaks only at the separators — see .post-stat, same problem. */
+    .post-embed-meta span, .post-embed-meta a { white-space: nowrap; }
+    .tweet-embed .post-embed-meta { margin-top: 0.5em; }
+
+    /* A gallery is a swipeable carousel on Substack and a bare div here, so the images
+       are stacked instead — at this measure five frames side by side would land each
+       one around 120px wide. */
+    figure.gallery img + img { margin-top: 0.7em; }
+
     pre, code { font-family: var(--mono); font-size: 0.8em; }
     pre { overflow-x: auto; padding: 1em; background: #f6f6f6; }
 

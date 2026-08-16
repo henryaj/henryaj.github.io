@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 require 'rss'
+require 'cgi'
 require 'net/http'
 require 'json'
+require 'time'
 require 'fileutils'
 
 FEED_URL  = 'https://henryaj.substack.com/feed'
@@ -9,6 +11,7 @@ API_URL   = 'https://henryaj.substack.com/api/v1/posts'
 REPO_ROOT = File.expand_path('..', __dir__)
 POSTS_DIR = File.join(REPO_ROOT, '_posts')
 DATA_DIR  = File.join(REPO_ROOT, '_data')
+IMAGES_DIR = File.join(REPO_ROOT, 'images', 'substack')
 DATA_FILE      = File.join(DATA_DIR, 'substack.json')
 STATS_FILE     = File.join(DATA_DIR, 'substack_stats.json')
 FAVOURITES_FILE = File.join(DATA_DIR, 'reader_favourites.json')
@@ -17,10 +20,12 @@ FAVOURITES_YEAR = '2026'
 FAVOURITES_LIMIT = 5
 USER_AGENT = 'Mozilla/5.0 (compatible; JekyllBuild/1.0)'
 
-def http_get(url)
+def http_fetch(url, depth = 0)
+  raise "Too many redirects for #{url}" if depth > 5
+
   uri = URI(url)
   http = Net::HTTP.new(uri.host, uri.port)
-  http.use_ssl = true
+  http.use_ssl = uri.scheme == 'https'
   req = Net::HTTP::Get.new(uri)
   req['User-Agent'] = USER_AGENT
   req['Accept'] = '*/*'
@@ -28,10 +33,14 @@ def http_get(url)
 
   # Follow redirects
   if response.is_a?(Net::HTTPRedirection)
-    return http_get(response['location'])
+    return http_fetch(response['location'], depth + 1)
   end
 
-  response.body
+  response
+end
+
+def http_get(url)
+  http_fetch(url).body
 end
 
 def fetch_api_metadata
@@ -64,35 +73,36 @@ def slug_from_url(url)
   url.split('/p/').last.split('?').first
 end
 
+# Index just past the </div> closing the tag that opens at `start`, or nil if the
+# markup is unbalanced. Substack nests its widgets and embeds several divs deep, so
+# a non-greedy /<div...>.*?<\/div>/ would close at the first </div> and leave orphaned
+# markup behind; the only way to find the real closing tag is to count depth.
+def div_extent(html, start)
+  depth = 0
+  i = start
+  while i < html.length
+    if html[i, 4] == '<div'
+      depth += 1
+      i += 4
+    elsif html[i, 6] == '</div>'
+      depth -= 1
+      i += 6
+      return i if depth.zero?
+    else
+      i += 1
+    end
+  end
+  nil
+end
+
 # Remove the "reader-supported publication / Subscribe" CTA Substack appends to the
 # body, along with the <hr> separator it sometimes puts immediately before it.
-#
-# This can't be a gsub: the widget nests divs three deep and contains void <input>
-# tags, so a non-greedy /<div...>.*?<\/div>/ closes at the first </div> and leaves
-# orphaned markup behind. Track div depth to find the real closing tag.
 def strip_subscribe_widgets(html)
   loop do
     start = html.index(/<div[^>]*class="[^"]*subscription-widget[^"]*"/)
     break unless start
 
-    depth = 0
-    i = start
-    finish = nil
-    while i < html.length
-      if html[i, 4] == '<div'
-        depth += 1
-        i += 4
-      elsif html[i, 6] == '</div>'
-        depth -= 1
-        i += 6
-        if depth.zero?
-          finish = i
-          break
-        end
-      else
-        i += 1
-      end
-    end
+    finish = div_extent(html, start)
     # Unbalanced markup: leave it alone rather than truncating the post.
     break unless finish
 
@@ -174,6 +184,243 @@ def clean_html(html)
   html.strip
 end
 
+# Substack ships its embeds as a <div> carrying a data-attrs JSON payload. Some of
+# them (an embedded post) also contain rendered markup, styled by CSS that exists
+# only on Substack — here that arrived as a bare stack of links. The rest (post
+# digests, image galleries, tweets, video) contain nothing at all: the payload IS
+# the content, and without Substack's JavaScript to expand it the reader sees an
+# empty div. 35 gallery images were invisible on this site for exactly that reason.
+#
+# So: read the payload and re-emit each embed as plain markup the site's own CSS
+# already knows how to set. Everything Substack renders that this site has no
+# vocabulary for — cover thumbnails, avatars, like/comment counts that freeze at
+# fetch time and rot from there — is dropped rather than approximated.
+EMBED_CLASSES = %w[
+  embedded-post-wrap
+  digest-post-embed
+  image-gallery-embed
+  twitter-embed
+  native-video-embed
+].freeze
+
+def embed_attrs(tag)
+  json = tag[/data-attrs="([^"]*)"/, 1]
+  return nil unless json
+  JSON.parse(CGI.unescapeHTML(json))
+rescue JSON::ParserError
+  nil
+end
+
+def esc(text)
+  CGI.escapeHTML(text.to_s)
+end
+
+# Each part in its own span: Silkscreen at 12px with a letter-spaced tracking runs
+# wide, and a three-name byline wraps — without this it breaks inside the date and
+# leaves the year stranded on a line of its own.
+def meta_line(parts)
+  parts.compact.map { |part| %(<span>#{esc(part)}</span>) }.join(' &#183; ')
+end
+
+def embed_date(value)
+  Time.parse(value).utc.strftime('%-d %b %Y')
+rescue StandardError
+  nil
+end
+
+# Substack's CDN resizes anything you hand it, and the signature in the URLs it
+# writes turns out not to be checked — so a raw S3 original (galleries reference
+# those directly, at up to 4000px) can be pulled through the same transform the
+# body images use. That's a 3.2MB PNG down to a 64KB JPEG, and it moots the HEICs.
+def cdn_resized(url)
+  return url if url.start_with?('https://substackcdn.com/')
+  "https://substackcdn.com/image/fetch/w_1456,c_limit,f_auto,q_auto:good," \
+    "fl_progressive:steep/#{CGI.escape(url)}"
+end
+
+# An embedded post that happens to be one of Henry's own is on this site too, so
+# point at the local copy rather than sending the reader back to Substack.
+def embed_link(url)
+  slug = url[%r{\Ahttps://henryaj\.substack\.com/p/([^/?#]+)}, 1]
+  return url unless slug
+  Dir.glob(File.join(POSTS_DIR, "*-#{slug}.md")).empty? ? url : "/#{slug}/"
+end
+
+# Both the "embedded post" and "post digest" embeds are a pointer at another post,
+# so they get the same card: title, standfirst if there is one, and a Silkscreen
+# meta line built from whichever of the two payload shapes this is.
+def post_card(attrs)
+  url = attrs['url'] || attrs['canonical_url']
+  title = attrs['title']
+  return '' unless url && title
+
+  bylines = (attrs['bylines'] || attrs['publishedBylines'] || []).filter_map { |b| b['name'] }
+  meta = [attrs['publication_name'], *bylines, embed_date(attrs['date'] || attrs['post_date'])]
+  excerpt = [attrs['truncated_body_text'], attrs['caption']].map(&:to_s).find { |t| !t.strip.empty? }
+
+  card = %(<aside class="post-embed">\n)
+  card += %(  <a class="post-embed-title" href="#{esc(embed_link(url))}">#{esc(title)}</a>\n)
+  card += %(  <p class="post-embed-excerpt">#{esc(excerpt.strip)}</p>\n) if excerpt
+  card += %(  <div class="post-embed-meta">#{meta_line(meta)}</div>\n)
+  card + %(</aside>)
+end
+
+def gallery_figure(attrs)
+  gallery = attrs['gallery'] || {}
+  images = (gallery['images'] || []).filter_map { |image| image['src'] }
+  return '' if images.empty?
+
+  alt = esc(gallery['alt'])
+  figure = %(<figure class="gallery">\n)
+  figure += images.map { |src| %(  <img src="#{esc(cdn_resized(src))}" alt="#{alt}" loading="lazy">) }.join("\n")
+  figure += %(\n  <figcaption>#{esc(gallery['caption'])}</figcaption>) unless gallery['caption'].to_s.strip.empty?
+  figure + %(\n</figure>)
+end
+
+# Just the text and who said it. The payload also carries a twimg video URL and a
+# thumbnail with a play button burned into it, both of which would be a dead end
+# here — this site has no player and hotlinking twimg is a broken image waiting to
+# happen.
+def tweet_quote(attrs)
+  text = attrs['full_text']
+  return '' unless text
+
+  who = [attrs['name'], attrs['username'] && "@#{attrs['username']}"].compact.join(' ')
+  date = embed_date(attrs['date'])
+  meta = [attrs['url'] ? %(<a href="#{esc(attrs['url'])}">#{esc(who)}</a>) : %(<span>#{esc(who)}</span>),
+          date && %(<span>#{esc(date)}</span>)].compact.join(' &#183; ')
+  %(<blockquote class="tweet-embed">\n  <p>#{esc(text.strip)}</p>\n) +
+    %(  <div class="post-embed-meta">#{meta}</div>\n</blockquote>)
+end
+
+# Substack uploads video to its own player and the payload names only an internal
+# upload id — there's no URL to point a <video> at. Say so and link out, rather
+# than leaving the reader with the silent gap the empty div gave them.
+def video_link(_attrs, canonical_url)
+  return '' unless canonical_url
+  %(<p class="post-embed-meta">Video &#183; ) +
+    %(<a href="#{esc(canonical_url)}">watch on Substack</a></p>)
+end
+
+def rewrite_embed(klass, attrs, canonical_url)
+  case klass
+  when 'embedded-post-wrap', 'digest-post-embed' then post_card(attrs)
+  when 'image-gallery-embed' then gallery_figure(attrs)
+  when 'twitter-embed' then tweet_quote(attrs)
+  when 'native-video-embed' then video_link(attrs, canonical_url)
+  else ''
+  end
+end
+
+def rewrite_embeds(html, canonical_url)
+  EMBED_CLASSES.each do |klass|
+    search_from = 0
+    loop do
+      start = html.index(%(<div class="#{klass}"), search_from)
+      break unless start
+
+      finish = div_extent(html, start)
+      # Unbalanced markup: leave the embed alone rather than eating the rest of the post.
+      break unless finish
+
+      attrs = embed_attrs(html[start...finish])
+      replacement = attrs ? rewrite_embed(klass, attrs, canonical_url) : ''
+      html = html[0...start] + replacement + html[finish..]
+      # Past the replacement, so a handler that declines to rewrite can't spin forever.
+      search_from = start + replacement.length
+    end
+  end
+  html
+end
+
+# Substack hotlinks every image from its own CDN, so a post here is only as durable
+# as those URLs are. Pull each image into the repo the first time it's seen and
+# rewrite the tag to point at the local copy.
+#
+# Fetch the CDN URL rather than the S3 original it wraps: the originals include
+# HEICs, which most browsers won't render, and the CDN transcodes them to JPEG on
+# the way out. The transform in the URL (w_1456 for body images, w_56 for the odd
+# inline logo) is left as Substack wrote it, so each image arrives at the size the
+# post actually asked for.
+IMAGE_EXTENSIONS = {
+  'image/jpeg' => 'jpg',
+  'image/png'  => 'png',
+  'image/gif'  => 'gif',
+  'image/webp' => 'webp',
+  'image/avif' => 'avif',
+  'image/svg+xml' => 'svg'
+}.freeze
+
+# Images land in images/substack/<slug>/, numbered in the order they appear. Nothing
+# reads the number, so a gap or a restart after a failed fetch is harmless — but two
+# files must never collide, hence picking up after whatever is already on disk.
+def next_image_path(slug, ext)
+  dir = File.join(IMAGES_DIR, slug)
+  FileUtils.mkdir_p(dir)
+  used = Dir.children(dir).map { |f| File.basename(f, '.*').to_i }
+  seq = (used.max || 0) + 1
+  File.join(dir, "#{seq}.#{ext}")
+end
+
+def download_image(url, slug)
+  response = http_fetch(url)
+  unless response.is_a?(Net::HTTPSuccess)
+    warn "    warn: #{response.code} fetching #{url}"
+    return nil
+  end
+
+  type = response['content-type'].to_s.split(';').first
+  ext = IMAGE_EXTENSIONS[type]
+  unless ext
+    warn "    warn: unhandled content type #{type.inspect} for #{url}"
+    return nil
+  end
+
+  path = next_image_path(slug, ext)
+  File.binwrite(path, response.body)
+  "/images/substack/#{slug}/#{File.basename(path)}"
+rescue StandardError => e
+  warn "    warn: could not fetch #{url}: #{e.message}"
+  nil
+end
+
+# Only <img src> is touched. The data-attrs JSON blobs on Substack's embed divs
+# carry CDN URLs too, but nothing on this site renders them.
+def localise_images(html, slug)
+  seen = {}
+  html.gsub(/(<img\b[^>]*\bsrc=")([^"]+)(")/) do
+    prefix, url, suffix = $1, $2, $3
+    if url.start_with?('http')
+      local = seen.key?(url) ? seen[url] : (seen[url] = download_image(url, slug))
+      url = local if local
+    end
+    "#{prefix}#{url}#{suffix}"
+  end
+end
+
+# Runs over every Substack post on each sync, not just the ones written this time:
+# both passes are idempotent (a rewritten post has no embeds or remote URLs left to
+# find) and it means a fetch that failed on an earlier run gets another go. Embeds
+# are rewritten before images, so the gallery images they unpack get localised in
+# the same sweep.
+def rewrite_posts
+  Dir.glob(File.join(POSTS_DIR, '*.md')).sort.each do |path|
+    raw = File.read(path)
+    next unless raw.include?('source: substack')
+    # Split the frontmatter off so rewriting can only ever touch the body.
+    head, body = raw.match(/\A(---\n.*?\n---\n)(.*)\z/m)&.captures
+    next unless body
+
+    slug = File.basename(path, '.md').sub(/^\d{4}-\d{2}-\d{2}-/, '')
+    rewritten = localise_images(rewrite_embeds(body, head[/^canonical_url:\s*(\S+)/, 1]), slug)
+    next if rewritten == body
+
+    File.write(path, head + rewritten)
+    puts "  rewrote: #{File.basename(path)}"
+  end
+end
+
+
 xml = http_get(FEED_URL)
 
 # Verify we got XML, not a Cloudflare challenge page
@@ -182,7 +429,6 @@ unless xml.start_with?('<?xml') || xml.start_with?('<rss')
   FileUtils.mkdir_p(DATA_DIR)
 
   # Build homepage data from committed substack posts
-  require 'time'
   substack_posts = Dir.glob(File.join(POSTS_DIR, '*.md')).filter_map do |f|
     content = File.read(f)
     next unless content.include?('source: substack')
@@ -260,6 +506,8 @@ feed.items.sort_by { |item| item.pubDate }.reverse.each do |item|
   puts "  new:  #{filename}"
   new_count += 1
 end
+
+rewrite_posts
 
 File.write(DATA_FILE, JSON.pretty_generate(homepage_data))
 

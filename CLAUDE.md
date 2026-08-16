@@ -113,6 +113,30 @@ and just builds what's in the repo.
 Post front matter carries `subtitle:` (the Substack subtitle, taken from the RSS
 `description`), which the homepage sets under each entry.
 
+### Images and embeds
+
+After writing new posts the script sweeps **every** Substack post, not just the new
+ones, and rewrites two things in place:
+
+- **Images** are downloaded into `images/substack/<slug>/<n>.<ext>` and the `src`
+  repointed at the local copy, so no post depends on Substack's CDN staying up. It
+  fetches the CDN URL rather than the S3 original it wraps — the originals include
+  HEICs that most browsers won't render, and the CDN transcodes on the way out. The
+  extension comes from the response `Content-Type`, not the URL. A failed fetch warns
+  and leaves the remote URL, so the next run retries it.
+- **Embeds** (`embedded-post-wrap`, `digest-post-embed`, `image-gallery-embed`,
+  `twitter-embed`, `native-video-embed`) become plain markup — `.post-embed` cards,
+  `figure.gallery`, `blockquote.tweet-embed` — styled in `_layouts/default.html`.
+  Substack ships these as a div carrying a `data-attrs` JSON payload; the gallery and
+  digest ones carry no rendered markup at all, so before this they were empty divs
+  that showed nothing. An embedded post that is one of Henry's own links to the local
+  copy rather than back to Substack.
+
+Both passes are idempotent — a rewritten post has no embeds or remote URLs left to
+find — but they are also **one-way**: the original `data-attrs` payload is consumed.
+Changing the card markup means `git checkout _posts/`, clearing `images/substack/`,
+and re-running, not just re-running.
+
 ## Deploy
 
 Push to `master` triggers a GitHub Actions build (`.github/workflows/pages.yml`), which
