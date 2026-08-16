@@ -21,12 +21,17 @@
        x-height so the mark sits inside the line rather than on top of it. */
     width: 0.85em;
     height: 0.85em;
-    /* Asymmetric, and deliberately so. The gap on the left is a word space the
-       text already set; the gap on the right is only this padding. Splitting the
-       space evenly therefore reads lopsided — the mark drifts toward the link it
-       belongs to and away from the word it doesn't. */
+    /* Unequal on purpose. What sits to the left of the mark is a word space the
+       surrounding serif already set — about 5px at the body's 20px — plus this
+       padding; what sits to its right is the padding alone, so equal numbers give
+       visibly unequal gaps and the right side reads tight. Note that these two
+       don't balance arithmetically either: matching 5px + 0.14em on the right
+       would want about 0.42em, not 0.26em. 0.26em is what looked right when the
+       candidates were rendered side by side, which is the only test that settles
+       this — the underline runs through both gaps and ties them into one interval,
+       so the eye is judging a rhythm rather than measuring two areas of white. */
     padding-left: 0.14em;
-    padding-right: 0.18em;
+    padding-right: 0.26em;
     /* Closes the gap between the bottom of the mark and where the text's own
        underline runs: text-underline-offset puts that line 0.18em under the
        baseline, and the box's bottom edge is pinned 0.13em under it. */
