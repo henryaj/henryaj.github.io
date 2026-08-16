@@ -1,0 +1,111 @@
+<!-- Link favicons. The icons are vendored locally by _scripts/fetch_favicons.rb —
+     an icon service like Google's s2 or DuckDuckGo's ip3 would work with no build
+     step at all, but it would also mean a third-party request per outbound link on
+     every page, which is the one thing this site has consistently refused. -->
+<style>
+  /* Applied by the script below, and only once the icon has actually decoded —
+     an unresolved background-image reserves the box and paints nothing, which is
+     a worse line than no icon at all. */
+  a.favicon::before {
+    content: "";
+    display: inline-block;
+    /* content-box, against the site's global border-box rule: the width below is
+       the mark itself, and the padding either side of it is the gap to the words
+       on each side. Those gaps are padding rather than margin so that the border
+       further down runs through them — see the hover note. */
+    box-sizing: content-box;
+    /* Sized in em off the link's own face rather than in px, so it holds its
+       proportion wherever a link is set down — sidenotes, glosses, the archive
+       asides. 0.85em of the link's 17.7px lands at ~15px, near enough the 16 CSS
+       px that maps the 32px source 1:1 on a 2x screen, and close to Figtree's
+       x-height so the mark sits inside the line rather than on top of it. */
+    width: 0.85em;
+    height: 0.85em;
+    /* Asymmetric, and deliberately so. The gap on the left is a word space the
+       text already set; the gap on the right is only this padding. Splitting the
+       space evenly therefore reads lopsided — the mark drifts toward the link it
+       belongs to and away from the word it doesn't. */
+    padding-left: 0.14em;
+    padding-right: 0.18em;
+    /* Closes the gap between the bottom of the mark and where the text's own
+       underline runs: text-underline-offset puts that line 0.18em under the
+       baseline, and the box's bottom edge is pinned 0.13em under it. */
+    padding-bottom: 0.05em;
+    /* Declared transparent here rather than added on :hover so the box never
+       changes size mid-interaction — hover only colours it in. */
+    border-bottom: 1px solid transparent;
+    /* Optical, not metric: the mark is a full square where the surrounding
+       lowercase is x-height, so sitting it on the baseline reads as riding high.
+       The padding and border added below it are backed out here, so the mark
+       itself lands where it did before they existed. */
+    vertical-align: calc(-0.18em - 1px);
+    background: var(--favicon) center / contain no-repeat;
+    /* After the shorthand, which resets this to padding-box — the mark is sized
+       to the content box, so the padding stays clear of it. */
+    background-origin: content-box;
+  }
+  /* Chrome won't run a text-decoration through an atomic inline, so the hover
+     underline stops dead at the mark and picks up again at the first letter. This
+     border is the missing segment: same 1px, same offset from the baseline, and
+     it spans the padding either side, so the rule arrives as one unbroken line
+     that starts before the mark rather than after it. */
+  a.favicon:hover::before { border-bottom-color: currentColor; }
+</style>
+<script>
+  (function () {
+    // Own hosts get no mark: the icon says "this leaves the site", so pointing it
+    // at the site you are on says nothing.
+    var OWN = /(^|\.)(henrystanley\.com|henryaj\.github\.io|localhost)$/;
+    var cache = {};
+
+    function hostOf(a) {
+      if (a.protocol !== 'http:' && a.protocol !== 'https:') return null;
+      var h = a.hostname.toLowerCase().replace(/^(www|m|en-gb)\./, '');
+      if (!h || OWN.test(h) || h === location.hostname.toLowerCase().replace(/^www\./, '')) return null;
+      return h;
+    }
+
+    function decorate(a, host) {
+      a.style.setProperty('--favicon', 'url("/images/favicons/' + host + '.png")');
+      a.classList.add('favicon');
+    }
+
+    // Only ~270 of the ~340 hosts the archive links to have an icon worth
+    // vendoring — dead domains and plain-HTML pages from 2011 mostly don't. Rather
+    // than ship a manifest of which do, each link probes its own icon and stays
+    // bare if it 404s. The browser dedupes the request, and the <img> the probe
+    // loads is the same cache entry the background-image then reuses.
+    function probe(a, host) {
+      var img = cache[host];
+      if (!img) {
+        img = cache[host] = new Image();
+        img.src = '/images/favicons/' + host + '.png';
+      }
+      if (img.complete) {
+        if (img.naturalWidth) decorate(a, host);
+        return;
+      }
+      img.addEventListener('load', function () { decorate(a, host); });
+    }
+
+    var links = document.querySelectorAll('a[href]');
+    for (var i = 0; i < links.length; i++) {
+      var a = links[i];
+      // The site nav and the post meta line are chrome, not prose.
+      // Chrome, not prose — and the homepage rail is chrome too, whatever its links
+      // point at: it's a set of handles for the same person, set in a bitmap face
+      // on a hard 8px grid, and a column of resampled brand marks down its left edge
+      // fights that rather than annotating it. The project cards are out for a
+      // different reason: only three of the eight destinations have an icon to
+      // vendor, and a grid where some cells are indented and some aren't reads as
+      // broken rather than as annotated.
+      if (a.closest('.site-nav, .meta, .post-embed-meta, .card, .rail')) continue;
+      // data-favicon names an icon explicitly, for the case where the destination
+      // isn't what the link is about — "Pivotal" pointing at its Wikipedia article
+      // wants Pivotal's mark, not Wikipedia's W. Overrides the derived host, and
+      // skips its filtering with it: naming the icon is the whole decision.
+      var host = a.getAttribute('data-favicon') || hostOf(a);
+      if (host) probe(a, host);
+    }
+  })();
+</script>

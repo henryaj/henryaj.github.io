@@ -64,6 +64,67 @@ EB Garamond does draw those, if it comes to it.
 GoatCounter and Plausible analytics, both in `_includes/analytics.html`, included by
 `index.html` and `_layouts/default.html`.
 
+### Link favicons
+
+Outbound links carry the destination's favicon, wired up by `_includes/favicons.html`
+(included by both `index.html` and `_layouts/default.html`, same as `typography.html`).
+
+The icons are **vendored locally** into `images/favicons/<host>.png` by
+`_scripts/fetch_favicons.rb` (`just favicons`, and folded into `just sync`). An icon
+service — Google's `s2/favicons`, DuckDuckGo's `ip3` — would need no build step at
+all, but it also means a third-party request per outbound link on every page, which
+is the one thing this site has consistently refused. The script scans `_posts/`,
+`index.html`, `archive.html` and `404.html` for external hosts, pulls each icon from
+DDG's aggregator (falling back to the host's own `/favicon.ico`), and normalises it
+to a 32px PNG. Hosts already on disk are skipped, so re-running after new posts
+reaches out for the new domains — plus a retry of every host that came back without
+an icon last time, since a miss leaves nothing on disk to skip on.
+
+Two things the script has to get right, both of which failed silently first time:
+
+- **ImageMagick can't sniff ICO.** Its header (`00 00 01 00`) is too weak, so an
+  `.ico` written to an extensionless temp file just fails to load — which is why the
+  first run lost github.com, wikipedia and every other ICO host while the PNG hosts
+  came through fine. The temp file's extension is the format hint, so it has to be
+  derived from the blob's magic bytes.
+- **Blank icons are worse than none.** They reserve space in the line and paint
+  nothing, which reads as a typo. Rejected two ways: files under 400 bytes, and
+  icons that come out white-on-white once flattened onto the page background.
+
+Of ~340 linked hosts about 270 have an icon; the rest are dead domains and plain-HTML
+pages from 2011 that never had one. Rather than ship a manifest of which do, each link
+probes its own icon client-side and stays bare if it 404s — the browser dedupes the
+request, and the `<img>` the probe loads is the same cache entry the `background-image`
+then reuses. With JS off you get no icons and no gaps — the links are just links.
+
+A link can name an icon other than its destination's with `data-favicon="<host>"`.
+The homepage's "Pivotal" points at the Wikipedia article, which by default draws
+Wikipedia's W — the destination, but not what the link is about. It carries
+`data-favicon="pivotal.io"` instead. That file is the one hand-built icon in the
+directory: Pivotal is dead, so the only mark left is a 16px `favicon.ico` in a 2020
+Wayback capture, too small to upscale. It was rebuilt at 32px by cutting the P out of
+the vector wordmark on Wikimedia Commons and setting it white on the teal sampled off
+the original — same letterform, same colour, actually sharp. The fetch script skips
+hosts already on disk, so it won't be overwritten.
+
+Chrome won't run a text-decoration through an atomic inline, so the hover underline
+stops dead at the mark and restarts at the first letter. The pseudo-element draws the
+missing segment itself with a `border-bottom`, declared transparent and only coloured
+in on hover so the box never resizes mid-interaction. That's also why the gaps either
+side of the mark are padding rather than margin, and why the element is `content-box`
+against the site's global `border-box`: the border has to span the gaps for the rule
+to arrive as one unbroken line. The 0.05em of `padding-bottom` and the `calc()` in
+`vertical-align` are what put that border exactly on `text-underline-offset` without
+moving the mark.
+
+Not decorated: the site nav and post meta lines (chrome, not prose), and the whole
+homepage rail — chrome too, whatever its links point at. It's a set of handles for
+the same person set in a bitmap face on a hard 8px grid, and a column of resampled
+brand marks down its left edge fights that rather than annotating it. The project
+cards are out for a different reason: only three of the eight destinations have an
+icon, and a grid where some cells are indented and some aren't reads as broken rather
+than as annotated.
+
 ### Building the body-face subsets
 
 `public/fonts/crimsonpro-*.woff2` are built by hand from the upstream variable
