@@ -214,6 +214,25 @@ find — but they are also **one-way**: the original `data-attrs` payload is con
 Changing the card markup means `git checkout _posts/`, clearing `images/substack/`,
 and re-running, not just re-running.
 
+## WordPress-era images
+
+The eight posts that predate Substack hotlinked their images from
+`henryaj.files.wordpress.com`. Those are vendored into `images/wordpress/` and the
+markdown repointed at the local copy — same reasoning as the Substack sweep, one less
+host the archive depends on. It was a one-off: nothing writes to that directory now,
+and neither `_posts/` nor `_drafts/` references that host any more (its favicon went
+with it).
+
+Each file is named `<yyyy>-<mm>-<basename>` after its position in the old media
+library, with the `-w<N>` suffix kept where the post asked for a resized variant — two
+posts use the same photo at different widths, and the width is part of what the page
+renders. Where a post linked the bare original the fetch asked WordPress for `?w=1456`,
+the same cap the Substack sweep uses: it re-encodes on the way out, which took one
+2047px phone photo from 392KB to 158KB and changed nothing at this measure. The one
+PNG is the byte-for-byte original instead — WordPress's resizer quantises PNGs to a
+256-colour palette on the way out, and for an 80KB screenshot that's a lossy round
+trip bought for nothing.
+
 ## Deploy
 
 Push to `master` triggers a GitHub Actions build (`.github/workflows/pages.yml`), which

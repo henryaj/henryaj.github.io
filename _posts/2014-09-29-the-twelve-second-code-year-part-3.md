@@ -15,7 +15,7 @@ Makers Academy staggers each intake of students by six weeks, which means every 
 
 
 
-![IMG_6257.JPG](https://henryaj.files.wordpress.com/2014/09/img_6257.jpg)
+![IMG_6257.JPG](/images/wordpress/2014-09-img_6257.jpg)
 
 ## 8.
 

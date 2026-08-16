@@ -9,7 +9,7 @@ published: true
 
 ## 0.
 
-Not all tech startups are into ping-pong and meditating on beanbags, you know. ![Beanbag meditation](http://henryaj.files.wordpress.com/2014/08/img_9001.jpeg?w=660) This one totally is, though. I wouldn't have it any other way.
+Not all tech startups are into ping-pong and meditating on beanbags, you know. ![Beanbag meditation](/images/wordpress/2014-08-img_9001-w660.jpg) This one totally is, though. I wouldn't have it any other way.
 
 ## 1.
 

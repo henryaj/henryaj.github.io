@@ -13,7 +13,7 @@ category: programming
 
 Not all tech startups are into ping-pong and meditating on beanbags, you know.
 
-![Beanbag meditation](http://henryaj.files.wordpress.com/2014/08/img_9001.jpeg?w=660)
+![Beanbag meditation](/images/wordpress/2014-08-img_9001-w660.jpg)
 
 This one totally is, though. I wouldn't have it any other way.
 
@@ -64,7 +64,7 @@ Makers Academy staggers each intake of students by six weeks, which means every 
 
 > "At the end of the day, this is a bunch of people who come here and learn to code in twelve weeks. Which, in itself, is insane. When I first came here, I thought, 'there's no way you can learn to code in ten weeks.' (it was ten weeks back then.) ... But I saw people slowly learning to make machines do their bidding. And I think I speak for the whole team when I say **that's what keeps us alive** – seeing you all do this incredible thing."
 
-![IMG_6257.JPG](https://henryaj.files.wordpress.com/2014/09/img_6257.jpg?w=660)
+![IMG_6257.JPG](/images/wordpress/2014-09-img_6257-w660.jpg)
 
 ## 8.
 

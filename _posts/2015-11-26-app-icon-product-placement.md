@@ -6,4 +6,4 @@ layout: post
 
 _Was that always there?_
 
-![](https://henryaj.files.wordpress.com/2015/11/img_0172.png)
+![](/images/wordpress/2015-11-img_0172.png)

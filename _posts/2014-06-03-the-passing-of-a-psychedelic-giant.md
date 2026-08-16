@@ -4,7 +4,7 @@ date: 2014/06/03 09:14:16
 layout: post
 ---
 
-![1962784_686338798098756_7696906708965174545_n](http://henryaj.files.wordpress.com/2014/06/1962784_686338798098756_7696906708965174545_n.jpg?w=232) Alexander "Sasha" Shulgin died yesterday aged 88.[^fb] [^caringbridge] [^erowid]
+![1962784_686338798098756_7696906708965174545_n](/images/wordpress/2014-06-1962784_686338798098756_7696906708965174545_n-w232.jpg) Alexander "Sasha" Shulgin died yesterday aged 88.[^fb] [^caringbridge] [^erowid]
 
 [^fb]: https://www.facebook.com/photo.php?fbid=686340134765289&set=a.297028843696422.68924.287638407968799&type=1
 [^caringbridge]: http://www.caringbridge.org/visit/shura
