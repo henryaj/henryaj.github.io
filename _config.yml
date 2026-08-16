@@ -1,5 +1,5 @@
 title: Henry Stanley
-# tagline:
+description: "Henry Stanley — Director of Technology at Effektiv Spenden, writing from Berlin about software, philosophy and whatever else."
 email: &email henry@henrystanley.com
 
 baseurl: "" # the subpath of your site, e.g. /blog

@@ -14,7 +14,7 @@ require 'shellwords'
 REPO_ROOT    = File.expand_path('..', __dir__)
 FAVICONS_DIR = File.join(REPO_ROOT, 'images', 'favicons')
 SOURCES      = Dir[File.join(REPO_ROOT, '_posts', '*.md')] +
-               %w[index.html archive.html 404.html].map { |f| File.join(REPO_ROOT, f) }
+               %w[index.html writing.html 404.html].map { |f| File.join(REPO_ROOT, f) }
 # Own hosts get no icon — the point of the mark is "this leaves the site".
 OWN_HOSTS  = %w[henrystanley.com henryaj.github.io localhost].freeze
 USER_AGENT = 'Mozilla/5.0 (compatible; JekyllBuild/1.0)'

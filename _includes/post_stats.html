@@ -1,0 +1,18 @@
+{%- assign stat_data = site.data.substack_stats[include.slug] -%}
+{%- assign stat_thread = site.data.substack_comments[include.slug] -%}
+{%- assign stat_reactions = stat_data.reaction_count | default: 0 -%}
+{%- if stat_thread -%}
+  {%- assign stat_comments = stat_thread.size -%}
+{%- else -%}
+  {%- assign stat_comments = stat_data.comment_count | default: 0 -%}
+{%- endif -%}
+{%- assign stat_shown = false -%}
+{%- if stat_reactions > 0 -%}
+  {%- if include.lead %} &#183; {% endif -%}
+  <span class="post-stat" role="img" aria-label="{{ stat_reactions }} reaction{% if stat_reactions != 1 %}s{% endif %}">{% include icon_heart.html %} {{ stat_reactions }}</span>
+  {%- assign stat_shown = true -%}
+{%- endif -%}
+{%- if stat_comments > 0 -%}
+  {%- if include.lead or stat_shown %} &#183; {% endif -%}
+  <span class="post-stat" role="img" aria-label="{{ stat_comments }} comment{% if stat_comments != 1 %}s{% endif %}">{% include icon_comment.html %} {{ stat_comments }}</span>
+{%- endif -%}

@@ -8,6 +8,7 @@ require 'fileutils'
 
 FEED_URL  = 'https://henryaj.substack.com/feed'
 API_URL   = 'https://henryaj.substack.com/api/v1/posts'
+POST_API  = 'https://henryaj.substack.com/api/v1/post'
 REPO_ROOT = File.expand_path('..', __dir__)
 POSTS_DIR = File.join(REPO_ROOT, '_posts')
 DATA_DIR  = File.join(REPO_ROOT, '_data')
@@ -15,6 +16,7 @@ IMAGES_DIR = File.join(REPO_ROOT, 'images', 'substack')
 DATA_FILE      = File.join(DATA_DIR, 'substack.json')
 STATS_FILE     = File.join(DATA_DIR, 'substack_stats.json')
 FAVOURITES_FILE = File.join(DATA_DIR, 'reader_favourites.json')
+COMMENTS_FILE  = File.join(DATA_DIR, 'substack_comments.json')
 LIMIT          = 5
 FAVOURITES_YEAR = '2026'
 FAVOURITES_LIMIT = 5
@@ -53,6 +55,7 @@ def fetch_api_metadata
     break if posts.empty?
     posts.each do |post|
       metadata[post['slug']] = {
+        id: post['id'],
         title: post['title'],
         post_date: post['post_date'],
         comment_count: post['comment_count'] || 0,
@@ -420,6 +423,111 @@ def rewrite_posts
   end
 end
 
+# Comments live only on Substack — there's no backend here — so they're pulled in
+# read-only and rendered at the foot of the post. The endpoint takes no token: the
+# thread is public, and so is the JSON.
+#
+# Every sync rewrites the whole file rather than appending to it, which is what
+# makes an edited or deleted comment upstream actually disappear here. Posts whose
+# fetch fails keep whatever was synced last time — a network blip shouldn't silently
+# empty a thread.
+MAX_COMMENT_DEPTH = 3
+
+# A comment body arrives twice: `body` as plain text, and `body_json` as a ProseMirror
+# document. The document is what gets rendered, because the plain text has lost the
+# links. It's rebuilt node by node with every string escaped on the way out — this is
+# text written by strangers, and none of it may reach the page as markup.
+def comment_marks(html, marks)
+  (marks || []).reduce(html) do |acc, mark|
+    case mark['type']
+    when 'strong' then "<strong>#{acc}</strong>"
+    when 'em' then "<em>#{acc}</em>"
+    when 'code' then "<code>#{acc}</code>"
+    when 'link'
+      href = mark.dig('attrs', 'href').to_s
+      # Anything not plainly http(s) — javascript:, data: — is dropped, not sanitised.
+      next acc unless href.match?(%r{\Ahttps?://}i)
+      %(<a href="#{esc(href)}" rel="nofollow ugc noopener">#{acc}</a>)
+    else acc
+    end
+  end
+end
+
+def comment_node(node)
+  children = (node['content'] || []).map { |child| comment_node(child) }.join
+  case node['type']
+  when 'text' then comment_marks(esc(node['text']), node['marks'])
+  when 'paragraph' then children.empty? ? '' : "<p>#{children}</p>"
+  when 'blockquote' then "<blockquote>#{children}</blockquote>"
+  when 'hard_break', 'hardBreak' then '<br>'
+  # doc, lists, and whatever Substack adds later: keep the text, drop the wrapper.
+  else children
+  end
+end
+
+def comment_html(comment)
+  doc = comment['body_json']
+  return comment_node(doc) if doc
+
+  # No document at all (the odd old comment): the plain text still has the paragraphs.
+  comment['body'].to_s.split(/\n{2,}/).filter_map do |para|
+    next if para.strip.empty?
+    "<p>#{esc(para.strip).gsub("\n", '<br>')}</p>"
+  end.join
+end
+
+# Threads nest arbitrarily — this one goes four deep — and Liquid has no clean way to
+# recurse a template into itself. So the tree is flattened here into reading order with
+# a depth on each comment, and the layout indents from that. A deleted comment is
+# dropped but its replies are kept, pulled up to its depth rather than left indented
+# under a parent that isn't there.
+def flatten_comments(comments, depth, out = [])
+  (comments || []).each do |comment|
+    kept = !comment['deleted'] && comment['status'] == 'published'
+    if kept
+      out << {
+        name: comment['name'].to_s.strip,
+        date: embed_date(comment['date']),
+        datetime: comment['date'],
+        depth: [depth, MAX_COMMENT_DEPTH].min,
+        reactions: comment['reaction_count'].to_i,
+        html: comment_html(comment)
+      }
+    end
+    flatten_comments(comment['children'], kept ? depth + 1 : depth, out)
+  end
+  out
+end
+
+def existing_comments
+  JSON.parse(File.read(COMMENTS_FILE))
+rescue StandardError
+  {}
+end
+
+def fetch_comments(api_metadata)
+  previous = existing_comments
+  threads = {}
+  api_metadata.each do |slug, meta|
+    next unless meta[:id] && meta[:comment_count].to_i.positive?
+
+    # The render is inside the rescue too: an unexpected node shape is as much a
+    # reason to keep the last good thread as a failed request, and letting it raise
+    # here would abort the sync after the other data files had already been written.
+    begin
+      payload = JSON.parse(http_get("#{POST_API}/#{meta[:id]}/comments?all_comments=true&sort=oldest_first"))
+      thread = flatten_comments(payload['comments'], 0)
+    rescue StandardError => e
+      warn "  warn: could not fetch comments for #{slug}: #{e.message}"
+      threads[slug] = previous[slug] if previous[slug]
+      next
+    end
+
+    threads[slug] = thread unless thread.empty?
+  end
+  threads
+end
+
 
 xml = http_get(FEED_URL)
 
@@ -516,7 +624,6 @@ stats = {}
 api_metadata.each do |slug, meta|
   stats[slug] = { comment_count: meta[:comment_count], reaction_count: meta[:reaction_count] }
 end
-File.write(STATS_FILE, JSON.pretty_generate(stats))
 
 # Top reader favourites for the configured year, by reaction count
 favourites = api_metadata
@@ -524,6 +631,21 @@ favourites = api_metadata
   .sort_by { |_slug, meta| -meta[:reaction_count] }
   .first(FAVOURITES_LIMIT)
   .map { |slug, meta| { title: meta[:title], url: "/#{slug}/", reaction_count: meta[:reaction_count] } }
-File.write(FAVOURITES_FILE, JSON.pretty_generate(favourites))
 
-puts "Synced #{new_count} new posts, #{homepage_data.length} in homepage data, #{stats.length} post stats, #{favourites.length} favourites"
+# Everything below is derived from the API sweep, and an empty hash means that sweep
+# failed rather than that there's nothing to say — writing from it would blank every
+# count on the site, empty the Best-of list and wipe every comment thread, and `just
+# sync` would commit and push the result. On a failure the last good files stand.
+if api_metadata.empty?
+  warn 'Warning: no Substack API metadata — leaving stats, favourites and comments as they are'
+  comment_threads = nil
+else
+  File.write(STATS_FILE, JSON.pretty_generate(stats))
+  File.write(FAVOURITES_FILE, JSON.pretty_generate(favourites))
+  comment_threads = fetch_comments(api_metadata)
+end
+File.write(COMMENTS_FILE, JSON.pretty_generate(comment_threads)) if comment_threads
+comment_total = comment_threads.to_h.values.sum(&:length)
+
+puts "Synced #{new_count} new posts, #{homepage_data.length} in homepage data, #{stats.length} post stats, " \
+     "#{favourites.length} favourites, #{comment_total} comments on #{comment_threads.to_h.length} posts"

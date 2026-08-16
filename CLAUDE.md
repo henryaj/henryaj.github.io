@@ -13,6 +13,9 @@ bundle exec jekyll serve
 
 - `index.html` — homepage, uses `layout: none` (self-contained HTML, no Jekyll templates)
 - `_layouts/` — `default.html` and `post.html`; everything else is self-contained
+- `_includes/` — shared fragments: `typography.html`, `favicons.html`, `analytics.html`,
+  `meta.html` (description/OG/Twitter card), `post_stats.html` and the two stat icons
+- `writing.html` — the full post index at `/writing/`, redirecting from `/archive/`
 - `_posts/` — blog posts (permalink pattern: `/:title/`)
 - `_drafts/` — unpublished drafts
 - `_config.yml` — Jekyll config
@@ -80,7 +83,7 @@ The icons are **vendored locally** into `images/favicons/<host>.png` by
 service — Google's `s2/favicons`, DuckDuckGo's `ip3` — would need no build step at
 all, but it also means a third-party request per outbound link on every page, which
 is the one thing this site has consistently refused. The script scans `_posts/`,
-`index.html`, `archive.html` and `404.html` for external hosts, pulls each icon from
+`index.html`, `writing.html` and `404.html` for external hosts, pulls each icon from
 DDG's aggregator (falling back to the host's own `/favicon.ico`), and normalises it
 to a 32px PNG. Hosts already on disk are skipped, so re-running after new posts
 reaches out for the new domains — plus a retry of every host that came back without
@@ -123,7 +126,9 @@ to arrive as one unbroken line. The 0.05em of `padding-bottom` and the `calc()` 
 `vertical-align` are what put that border exactly on `text-underline-offset` without
 moving the mark.
 
-Not decorated: the site nav and post meta lines (chrome, not prose), and the whole
+Not decorated: the site nav and post meta lines (chrome, not prose), the "Reply on
+Substack" link that closes a comment thread (it closes the apparatus rather than
+sitting in it, and the mark only repeats what the words say), and the whole
 homepage rail — chrome too, whatever its links point at. It's a set of handles for
 the same person set in a bitmap face on a hard 8px grid, and a column of resampled
 brand marks down its left edge fights that rather than annotating it. The project
@@ -180,7 +185,8 @@ Use `image-rendering: pixelated` in CSS and match the CSS display size to the so
 
 `just sync` runs `_scripts/fetch_substack.rb`, which pulls the RSS feed, writes any new
 posts into `_posts/`, and regenerates `_data/substack.json` (the homepage's Writing
-list), `substack_stats.json` and `reader_favourites.json`. All of it is committed.
+list), `substack_stats.json`, `reader_favourites.json` and `substack_comments.json`.
+All of it is committed.
 
 Run it locally only — Substack blocks the feed from GitHub Actions IPs, so in CI the
 script silently fell through to its fallback branch, which rebuilds the index from post
@@ -214,6 +220,74 @@ find — but they are also **one-way**: the original `data-attrs` payload is con
 Changing the card markup means `git checkout _posts/`, clearing `images/substack/`,
 and re-running, not just re-running.
 
+### Comments
+
+Substack's comments are synced in read-only and set below the asterism on each post —
+there's no comment backend here, so the thread ends in a link back to the Substack
+thread, which is the one place a reader can actually answer.
+
+`GET /api/v1/post/<id>/comments?all_comments=true&sort=oldest_first` needs no token;
+the post id comes from the same `/api/v1/posts` sweep the stats do. The whole file is
+regenerated every sync rather than appended to, which is what makes an edited or
+deleted comment upstream actually disappear here — but a post whose fetch *fails*
+keeps whatever was synced last time, so a network blip can't quietly empty a thread.
+
+An empty `/api/v1/posts` sweep means the API failed, not that there's nothing to say, so
+`substack_stats.json`, `reader_favourites.json` and `substack_comments.json` are all
+left alone in that case rather than regenerated from nothing — otherwise a blocked
+request blanks every count on the site and `just sync` commits and pushes the result.
+The feed and the API are separate requests, so the script can get past the RSS
+fallback branch above with no metadata at all.
+
+Two things the shape of the data forces:
+
+- **The body comes from `body_json`, not `body`.** The plain text has lost the links.
+  The ProseMirror document is walked node by node and every string escaped on the way
+  out — this is text written by strangers, and none of it may reach the page as
+  markup. Links are emitted `rel="nofollow ugc noopener"`, and an `href` that isn't
+  plainly `http(s)` is dropped rather than sanitised. In practice the corpus is all
+  paragraphs, text and links; the renderer also knows `strong`/`em`/`code`,
+  blockquotes and hard breaks, and anything else degrades to its text.
+- **Threads are flattened at fetch time.** They nest to four levels and Liquid can't
+  recurse a template into itself, so the tree is written out in reading order with a
+  `depth` on each comment (capped at 3) and the layout indents from that. A deleted
+  comment is dropped but its replies are kept, pulled up to its depth rather than left
+  indented under a parent that isn't there.
+
+The count shown on a post and down the Writing index is the length of the synced
+thread, not the API's `comment_count`: the two disagree as soon as a comment is
+deleted, and a post that advertises three and then shows two reads as a bug.
+
+**`_includes/post_stats.html` prefixes all of its locals `stat_`,** and `meta.html`
+prefixes its `meta_`. A Liquid include shares the caller's scope, so a bare `comments`
+in the include silently overwrote the post layout's variable of that name — and since
+the clobbered value was an Integer, `.size` returned 8 (Ruby's byte width) instead of
+the comment count. Any new include that assigns anything needs the same treatment.
+
+## Meta tags
+
+`_includes/meta.html` sets the description, Open Graph and Twitter card, and is
+included by both `index.html` and `_layouts/default.html` — the same arrangement
+`typography.html` and `favicons.html` use, for the same reason.
+
+Description falls back from the post's `subtitle:` to its first `<p>`, and only then to
+`site.description`. The middle step is doing most of the work: only 21 of the 151
+posts carry a subtitle, so without it the other 130 would all ship one identical bio
+as their description and card text. The first paragraph rather
+than `page.excerpt` because a post that opens on a `<figure>` would otherwise be
+described by its figure caption. Only posts get that fallback — a page's `page.content`
+at this point is its own unrendered source, not converted HTML.
+
+`og:url` is this site's URL for the page, not `page.canonical_url`: the canonical link
+still points Substack-ward for syndicated posts, but a card should name where the
+reader is about to land. The card image is the first `<img src>` under `/images/` in the
+body, which the image sweep has already pulled into `images/substack/`. Every image is
+tried, not just the first: a post can open on a remote image the sweep failed to vendor,
+and the old first-only read dropped a card image the post did in fact have. Pages with
+no local image declare a plain `summary` card rather than stretch the favicon into one —
+which is why the eight surviving WordPress-era posts, whose images still live on
+`henryaj.files.wordpress.com`, have no card image.
+
 ## WordPress-era images
 
 The eight posts that predate Substack hotlinked their images from
@@ -232,6 +306,7 @@ the same cap the Substack sweep uses: it re-encodes on the way out, which took o
 PNG is the byte-for-byte original instead — WordPress's resizer quantises PNGs to a
 256-colour palette on the way out, and for an 80KB screenshot that's a lossy round
 trip bought for nothing.
+
 
 ## Deploy
 
