@@ -14,4 +14,4 @@ These are highly effective interventions that are outstanding opportunities to d
 
 If the average US citizen gave 10% of their income to [The Against Malaria Foundation](https://www.againstmalaria.com/)​, then each year it could distribute 700 mosquito nets, preventing 190 cases of malaria and 2.2 deaths. Over a lifetime, that would amount to saving 90 lives. Real change is possible. You can make a difference.
 
-![FullSizeRender](https://henryaj.files.wordpress.com/2016/01/fullsizerender.jpg?w=600)
+![FullSizeRender](/images/wordpress/2016-01-fullsizerender-w600.jpg)

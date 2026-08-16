@@ -284,9 +284,29 @@ reader is about to land. The card image is the first `<img src>` under `/images/
 body, which the image sweep has already pulled into `images/substack/`. Every image is
 tried, not just the first: a post can open on a remote image the sweep failed to vendor,
 and the old first-only read dropped a card image the post did in fact have. Pages with
-no local image declare a plain `summary` card rather than stretch the favicon into one —
-which is why the eight surviving WordPress-era posts, whose images still live on
-`henryaj.files.wordpress.com`, have no card image.
+no local image declare a plain `summary` card rather than stretch the favicon into one.
+The `/images/` test is what made the WordPress-era posts cardless until their images
+were vendored too — see below.
+
+## WordPress-era images
+
+The eight posts that predate Substack hotlinked their images from
+`henryaj.files.wordpress.com`. Those are vendored into `images/wordpress/` and the
+markdown repointed at the local copy — same reasoning as the Substack sweep, one less
+host the archive depends on. It was a one-off: nothing writes to that directory now,
+and neither `_posts/` nor `_drafts/` references that host any more (its favicon went
+with it).
+
+Each file is named `<yyyy>-<mm>-<basename>` after its position in the old media
+library, with the `-w<N>` suffix kept where the post asked for a resized variant — two
+posts use the same photo at different widths, and the width is part of what the page
+renders. Where a post linked the bare original the fetch asked WordPress for `?w=1456`,
+the same cap the Substack sweep uses: it re-encodes on the way out, which took one
+2047px phone photo from 392KB to 158KB and changed nothing at this measure. The one
+PNG is the byte-for-byte original instead — WordPress's resizer quantises PNGs to a
+256-colour palette on the way out, and for an 80KB screenshot that's a lossy round
+trip bought for nothing.
+
 
 ## Deploy
 
