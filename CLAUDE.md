@@ -284,9 +284,9 @@ reader is about to land. The card image is the first `<img src>` under `/images/
 body, which the image sweep has already pulled into `images/substack/`. Every image is
 tried, not just the first: a post can open on a remote image the sweep failed to vendor,
 and the old first-only read dropped a card image the post did in fact have. Pages with
-no local image declare a plain `summary` card rather than stretch the favicon into one —
-which is why the eight surviving WordPress-era posts, whose images still live on
-`henryaj.files.wordpress.com`, have no card image.
+no local image declare a plain `summary` card rather than stretch the favicon into one.
+The `/images/` test is what made the WordPress-era posts cardless until their images
+were vendored too — see below.
 
 ## WordPress-era images
 
