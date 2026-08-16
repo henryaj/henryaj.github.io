@@ -9,6 +9,7 @@
   {% if page.canonical_url %}
   <link rel="canonical" href="{{ page.canonical_url }}">
   {% endif %}
+{% include meta.html %}
   {% include analytics.html %}
   <link rel="alternate" type="application/rss+xml" title="RSS" href="{{ site.baseurl }}/feed.xml">
   <link rel="icon" type="image/svg+xml" href="{{ site.baseurl }}/public/favicon.svg">
@@ -204,6 +205,54 @@
       padding-bottom: 4.5rem;
     }
 
+    /* Comments, synced read-only from Substack into _data/substack_comments.json and
+       set below the endmark — the asterism ends the piece, and what follows it is
+       apparatus. The thread is flat markup carrying a depth class per comment (Liquid
+       can't recurse a template into itself), so a reply's indent is cumulative here
+       rather than inherited from a parent it isn't nested inside. */
+    .comments { border-top: 1px solid var(--rule); padding-top: 1.4em; margin-bottom: 4rem; }
+    /* A heading structurally, but it labels apparatus rather than opening a passage of
+       prose, so it takes the pixel face the meta lines use rather than the display one. */
+    .comments-head {
+      font-family: var(--pixel);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      -webkit-font-smoothing: none;
+      color: var(--quiet);
+      margin: 0 0 1.6em;
+    }
+    .comment { margin: 1.5em 0; }
+    /* One step down from the post's own byline, same as .post-embed-meta: this is
+       apparatus about someone else's words and shouldn't out-weigh the page's. */
+    .comment-meta {
+      font-family: var(--pixel);
+      font-size: 12px;
+      letter-spacing: 1px;
+      -webkit-font-smoothing: none;
+      color: var(--quiet);
+      line-height: 1.7;
+    }
+    .comment-meta span, .comment-meta time { white-space: nowrap; }
+    /* Commenters paste bare URLs, and at this measure one of those is wider than the
+       column — without this it runs out past the right edge on a phone. */
+    .comment-body { font-size: 0.9em; line-height: 1.5; overflow-wrap: break-word; }
+    .comment-body p { margin: 0.2em 0 0.5em; }
+    .comment-body p:last-child { margin-bottom: 0; }
+    /* Replies take the left rule a quotation does — answering someone and quoting them
+       are near enough the same gesture — with the indent stepped per level. Depth is
+       capped at 3 in the sync script; one thread goes deeper and flattens into it. */
+    .comment.depth-1, .comment.depth-2, .comment.depth-3 {
+      border-left: 1px solid var(--rule);
+      padding-left: 1.1em;
+    }
+    .comment.depth-1 { margin-left: 1.2em; }
+    .comment.depth-2 { margin-left: 2.4em; }
+    .comment.depth-3 { margin-left: 3.6em; }
+    /* There's no comment backend here, so the thread ends by pointing back at the one
+       place a reader can actually answer. */
+    .comment-reply { margin: 2em 0 0; font-size: 0.9em; }
+
     /* Apparatus stays in the text face — Silkscreen can't set running prose. */
     .footnote {
       font-size: 0.82em;
@@ -240,7 +289,7 @@
 <body>
   <nav class="site-nav">
     <a href="/">Henry Stanley</a>
-    <a href="/archive">Archive</a>
+    <a href="/writing">Writing</a>
   </nav>
 
   {{ content }}

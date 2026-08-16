@@ -104,7 +104,10 @@
       // different reason: only three of the eight destinations have an icon to
       // vendor, and a grid where some cells are indented and some aren't reads as
       // broken rather than as annotated.
-      if (a.closest('.site-nav, .meta, .post-embed-meta, .card, .rail')) continue;
+      // The reply link at the foot of a comment thread is out for the same reason: it
+      // closes the apparatus rather than sitting in it, and Substack's mark on it just
+      // repeats what the words already say.
+      if (a.closest('.site-nav, .meta, .post-embed-meta, .card, .rail, .comment-reply')) continue;
       // data-favicon names an icon explicitly, for the case where the destination
       // isn't what the link is about — "Pivotal" pointing at its Wikipedia article
       // wants Pivotal's mark, not Wikipedia's W. Overrides the derived host, and
