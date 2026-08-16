@@ -43,6 +43,12 @@ One type system, defined once in `_includes/typography.html` and included by bot
   Replaced IBM Plex Sans, which was chosen to rhyme with Plex Mono below; that
   argument no longer holds, and Figtree's capitals run ~8% over Crimson Pro's
   cap height, which is a known and accepted trade.
+  The italic is Figtree's own, subset the same way — links inside `_..._` are
+  common enough in the archive (book and publication titles, mostly) that the
+  browser's synthesised oblique was visible: shearing a geometric sans bulges the
+  round letters at top-left and bottom-right and leaves the `g` leaning rather
+  than curving. Not preloaded, unlike the roman: too rare to charge every visitor
+  19KB for.
 - **IBM Plex Mono** — code
 
 The homepage and the post pages share a measure (`--measure`) and a gutter
@@ -146,6 +152,16 @@ italic, each subset once to the latin range and once to latin-ext. The unicode
 ranges are the ones declared in `_includes/typography.html`; keep the two in sync.
 Only the latin files come out carrying `onum` — latin-ext holds no digits, so
 pyftsubset drops the feature as unreachable. That's expected, not a failed build.
+
+The link face is built the same way, from `google/fonts/ofl/figtree`, with the
+axis clipped to 400–700 and no extra layout features — latin only, no latin-ext,
+so it's one file per style rather than two:
+
+```
+fonttools varLib.instancer "Figtree-Italic[wght].ttf" wght=400:700 -o fig-it.ttf
+pyftsubset fig-it.ttf --output-file=public/fonts/figtree-italic-latin.woff2 \
+  --unicodes="<the range from typography.html>" --flavor=woff2 --no-hinting
+```
 
 ## The dithered headshot
 

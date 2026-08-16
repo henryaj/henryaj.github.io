@@ -45,6 +45,29 @@ title: Henry Stanley
       text-underline-offset: 0.18em;
     }
     a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* The intro is the one block on the site that is mostly links — five lines of
+       biography where nearly every proper noun points somewhere. Everywhere else
+       the change of face carries the link on its own and the underline is held
+       back for hover; here that leaves a paragraph of loose vermilion words with
+       nothing tying them to the sentence they sit in. Setting the rule always-on
+       reads as a list of references rather than as scattered emphasis.
+       The mark's own segment has to be lit to match — it's a border, not a text
+       decoration, so it doesn't follow from the rule above. */
+    .intro a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+    .intro a.favicon::before { border-bottom-color: currentColor; }
+    /* With the underline already spent, hover has only the colour left, so it
+       takes the deeper vermilion and thickens the rule rather than drawing one.
+       The mark's segment thickens with it, or the rule steps 2px→1px→2px across
+       the icon. Its bottom edge is what's pinned to the underline's, so the extra
+       pixel comes off vertical-align too — otherwise the segment grows upward and
+       lands a pixel proud of the line it's meant to continue. Padding is untouched,
+       which leaves the mark itself exactly where it was. */
+    .intro a:hover { text-decoration-thickness: 2px; }
+    .intro a.favicon:hover::before {
+      border-bottom-width: 2px;
+      vertical-align: calc(-0.18em - 2px);
+    }
     /* The rail, the eyebrows and the cards each set their own face, so the link
        weight doesn't follow them in — on .card it would reach the serif gloss. */
     .rail a, .eyebrow a, .card { font-weight: 400; }
@@ -220,6 +243,7 @@ title: Henry Stanley
 
   <h1 class="name">Henry Stanley</h1>
   <p class="strap">computery guy</p>
+  <section class="intro">
   <p>
     Director of Technology at <a href="https://effektiv-spenden.org">Effektiv Spenden</a>.
   </p>
@@ -241,6 +265,7 @@ title: Henry Stanley
       <a href="https://www.givingwhatwecan.org/about-us/members">GWWC member</a> #1496.
     </li>
   </ul>
+  </section>
 
   {% if site.data.substack %}
   <div class="writing">

@@ -79,6 +79,25 @@
                      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193,
                      U+2212, U+2215, U+FEFF, U+FFFD;
     }
+    /* Figtree's own italic, not a synthesised slant. Without this the browser
+       shears the roman — the mechanical oblique that makes a geometric sans look
+       like it fell over, and the one thing a face this carefully fitted to Crimson
+       Pro can't afford. Erik Kennedy's italic is a drawn one at -9.5deg with its
+       own terminals, so it sits in a line of Crimson Pro italic rather than beside
+       it. Built and clipped exactly as the roman is, to the same range.
+       Deliberately not preloaded, unlike the roman: italic links are rare enough
+       that a preload would cost every visitor 19KB to save a handful of them a
+       swap. */
+    @font-face {
+      font-family: 'Figtree';
+      font-style: italic;
+      font-weight: 400 700;
+      font-display: swap;
+      src: url({{ site.baseurl }}/public/fonts/figtree-italic-latin.woff2) format('woff2');
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+                     U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193,
+                     U+2212, U+2215, U+FEFF, U+FFFD;
+    }
     /* The asterism each post closes with. Crimson Pro has no U+2042 — nor did the
        EB Garamond that preceded it, nor does upstream EB Garamond, so this mark
        had always been left to whatever symbol font the platform supplied. Cardo
