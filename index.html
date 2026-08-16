@@ -83,6 +83,82 @@ title: Henry Stanley
       .rail a { display: inline-block; margin-right: 1.3em; }
     }
 
+    /* The picks ride in the same gutter as the rail, so they take the rail's width
+       rather than the archive's 200px: one gutter column, one left edge. No panel
+       and no rule, because the margin position is itself what marks them as an
+       aside.
+       Absolutely positioned against the Writing block rather than floated: a float
+       would start below the eyebrow it follows, and the two section labels are
+       meant to sit on one line. top:0 is the eyebrow's own top — its margin
+       collapses through .writing, which has nothing to stop it. `right` takes the
+       same --gutter-pull a float's margin-right would. */
+    .writing { position: relative; }
+    .picks {
+      position: absolute;
+      top: 0;
+      right: var(--gutter-pull);
+      width: 180px;
+      font-size: 0.72em;
+      line-height: 1.4;
+    }
+    .picks h2 {
+      font-family: var(--pixel);
+      font-size: 14px;
+      font-weight: 400;
+      /* The body line-height, not the block's 1.4, so this label's glyphs sit on
+         the same optical top as the eyebrow's across the page. */
+      line-height: 1.55;
+      letter-spacing: 1px;
+      -webkit-font-smoothing: none;
+      color: var(--ink);
+      margin: 0 0 0.75em;
+    }
+    .picks ul { list-style: none; padding: 0; margin: 0; }
+    .picks li { margin: 0 0 0.7em; }
+    /* --link-size is an em, so inside an already-reduced block it would compound
+       down past legibility — same exemption the archive asides take. */
+    .picks a { font-size: inherit; }
+    /* Below --gutter-min the margin can't hold the panel, so it comes back inside
+       the measure at the rail's reduced width — in flow now, which means it starts
+       under the eyebrow and the label alignment above no longer applies. */
+    @media (max-width: 69.99em) {
+      .picks {
+        position: static;
+        float: right;
+        clear: right;
+        width: 132px;
+        margin: 0.2em 0 1.4em 1.6em;
+      }
+    }
+    /* The float above is taller than the five-post list it sits beside, and .writing
+       is not a block formatting context, so it overhangs the bottom of the Writing
+       block. Left uncleared, the next two boxes are both BFC roots (.eyebrow is a
+       flex container, .grid a grid one) and would shrink away from it rather than
+       flow past — the Projects rule stopping short of the right margin the moment a
+       pick is added or a title wraps one more line. */
+    #projects { clear: right; }
+    /* Too narrow to sit beside the list at all, so it becomes a block — and goes
+       below the posts rather than above them, or it reads as the Writing section's
+       contents. Ordered rather than moved in the markup: the float above has to
+       stay next to the list it sits beside. A top rule alone, since the Projects
+       eyebrow under it already closes the block. */
+    @media (max-width: 34em) {
+      /* Flex stops the eyebrow's top margin collapsing out of .writing, which at
+         every other width is what sets the space above the Writing rule. Carried
+         onto the wrapper instead so the two eyebrows keep the same approach: 2.6em
+         of the eyebrow's 14px is 36.4px, and .writing is set at the body's 20px. */
+      .writing { display: flex; flex-direction: column; margin-top: 1.82em; }
+      .writing > .eyebrow { margin-top: 0; }
+      .picks {
+        order: 1;
+        float: none;
+        width: auto;
+        margin: 0.6em 0 0;
+        border-top: 1px solid var(--rule);
+        padding-top: 1em;
+      }
+    }
+
     .name {
       font-family: var(--display);
       font-weight: 700;
@@ -165,13 +241,25 @@ title: Henry Stanley
   </ul>
 
   {% if site.data.substack %}
+  <div class="writing">
   <div class="eyebrow"><span>Writing</span><a href="/archive">All posts →</a></div>
+  {% if site.data.personal_picks.size > 0 %}
+  <aside class="picks">
+    <h2>Best of</h2>
+    <ul>
+      {% for pick in site.data.personal_picks %}
+      <li><a href="{{ pick.url }}">{{ pick.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+  {% endif %}
   {% for post in site.data.substack %}
   <div class="piece">
     <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span><span class="date">{{ post.date }}</span></div>
     {% if post.subtitle and post.subtitle != "" %}<div class="gloss">{{ post.subtitle }}</div>{% endif %}
   </div>
   {% endfor %}
+  </div>
   {% endif %}
 
   <div class="eyebrow" id="projects"><span>Projects</span></div>
