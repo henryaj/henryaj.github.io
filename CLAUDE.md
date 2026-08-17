@@ -6,7 +6,7 @@ Jekyll 4.2 site deployed to GitHub Pages via GitHub Actions. Ruby 3.4.
 
 ```
 bundle install
-bundle exec jekyll serve
+just serve   # bundle exec jekyll serve --livereload --drafts
 ```
 
 ## Structure
@@ -115,6 +115,13 @@ Wayback capture, too small to upscale. It was rebuilt at 32px by cutting the P o
 the vector wordmark on Wikimedia Commons and setting it white on the teal sampled off
 the original — same letterform, same colour, actually sharp. The fetch script skips
 hosts already on disk, so it won't be overwritten.
+
+`data-favicon="none"` goes the other way and opts a single link out, for a destination
+whose mark names the wrong thing with no better one to swap in: Google Patents serves
+the plain Google G, so the homepage's "patent" link would carry a mark that says
+Google. The fetch script reads hosts off the `href` and knows nothing about the
+attribute, so `images/favicons/patents.google.com.png` stays on disk — deleting it
+just means the next `just favicons` fetches it again.
 
 Chrome won't run a text-decoration through an atomic inline, so the hover underline
 stops dead at the mark and restarts at the first letter. The pseudo-element draws the

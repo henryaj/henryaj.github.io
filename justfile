@@ -8,3 +8,7 @@ sync:
 # Vendor favicons for outbound links. Idempotent: only fetches hosts not on disk
 favicons:
     ruby _scripts/fetch_favicons.rb
+
+# Serve the site locally with live reload on http://localhost:4000
+serve:
+    bundle exec jekyll serve --livereload --drafts
