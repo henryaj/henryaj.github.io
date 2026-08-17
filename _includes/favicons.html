@@ -112,7 +112,13 @@
       // isn't what the link is about — "Pivotal" pointing at its Wikipedia article
       // wants Pivotal's mark, not Wikipedia's W. Overrides the derived host, and
       // skips its filtering with it: naming the icon is the whole decision.
-      var host = a.getAttribute('data-favicon') || hostOf(a);
+      var named = a.getAttribute('data-favicon');
+      // data-favicon="none" opts a single link out, for a destination whose mark
+      // names the wrong thing and has no better one to swap in — Google Patents
+      // serves the plain Google G, so the patent link would carry a mark that says
+      // "Google" rather than "patent".
+      if (named === 'none') continue;
+      var host = named || hostOf(a);
       if (host) probe(a, host);
     }
   })();
