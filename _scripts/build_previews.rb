@@ -14,6 +14,7 @@
 # CLAUDE.md for what each one did.
 require 'json'
 require 'set'
+require 'yaml'
 require 'fileutils'
 require 'shellwords'
 require 'tmpdir'
@@ -25,6 +26,10 @@ DATA_FILE     = File.join(REPO_ROOT, '_data', 'previews.json')
 # The homepage list, written by fetch_substack.rb. Only those posts get a thumbnail:
 # cutting all 50 that qualify would commit ten times the bytes to serve five of them.
 SOURCE_LIST   = File.join(REPO_ROOT, '_data', 'substack.json')
+# `pinned_post:` in _config.yml swaps the fifth most recent entry for a fixed one, so
+# the script has to read the same switch the homepage does or it cuts a thumbnail for
+# a post that is no longer on show and none for the one that is.
+CONFIG_FILE   = File.join(REPO_ROOT, '_config.yml')
 
 # How far into the body an image still counts as the one the post opens on. Posts
 # that lead with a figure put it at character ~13; the next-earliest image in the
@@ -58,6 +63,28 @@ end
 # A `preview_crop:` that doesn't parse is a typo, not a request for the saliency
 # crop — say so, or the post silently keeps the thumbnail the override was added to
 # replace and the value looks like it did nothing.
+# `preview_image:` in a post's front matter names the source outright, for a post
+# whose title art isn't at the top — the pinned post's only image is 10,819 characters
+# in, well past LEAD_WINDOW, so without this it draws the empty slot. It bypasses only
+# the lead-window test: the path still has to be local, on disk and wide enough, since
+# those are about whether a usable sliver can be cut at all.
+def override_image(front_matter, slug)
+  line = front_matter[/^preview_image:.*$/]
+  return nil if line.nil?
+  value = line[/^preview_image:\s*["']?([^"'\s#]+)["']?\s*(?:#.*)?$/, 1]
+  if value.nil?
+    warn "  ! #{slug}: ignoring unparseable `#{line.strip}` (want a path under /images/)"
+    return nil
+  end
+  # Same local-only rule `lead_image` applies: a remote URL has nothing to cut from,
+  # and anything else would be joined onto REPO_ROOT and read from outside `images/`.
+  unless value.start_with?('/images/')
+    warn "  ! #{slug}: ignoring preview_image #{value} (want a path under /images/)"
+    return nil
+  end
+  value
+end
+
 def crop_fraction(front_matter, slug)
   line = front_matter[/^preview_crop:.*$/]
   return nil if line.nil?
@@ -141,7 +168,25 @@ if listed.empty?
   warn "#{File.basename(SOURCE_LIST)} is missing or empty — leaving thumbnails alone"
   exit 0
 end
-wanted = listed.map { |post| post['url'].to_s.delete('/') }.to_set
+slugs = listed.map { |post| post['url'].to_s.delete('/') }
+
+# YAML.safe_load rather than a regex: _config.yml is a real config file and the value
+# is quoted. `aliases: true` because the config uses YAML anchors and Psych refuses
+# them by default — without it every read raises and the pin silently never applies,
+# which is a failure with no symptom other than the wrong post having a thumbnail.
+# A genuinely unreadable config still leaves the pin off rather than raising.
+pinned = begin
+  YAML.safe_load(File.read(CONFIG_FILE), aliases: true)['pinned_post'].to_s.delete('/')
+rescue StandardError => e
+  warn "  ! couldn't read pinned_post from _config.yml (#{e.class}), assuming no pin"
+  ''
+end
+
+# Four recent plus the pin, matching index.html — which drops the pin out of the
+# recent list before taking four of them, so a pin that is also one of the most recent
+# is moved to the foot of the list rather than listed twice. Subtract it here for the
+# same reason: otherwise the fifth-most-recent post is on show with no thumbnail.
+wanted = (pinned.empty? ? slugs : (slugs - [pinned]).first(4) + [pinned]).to_set
 
 FileUtils.mkdir_p(PREVIEWS_DIR)
 FileUtils.mkdir_p(File.dirname(DATA_FILE))
@@ -156,11 +201,18 @@ Dir[File.join(POSTS_DIR, '*.{md,markdown}')].sort.each do |post|
   next unless wanted.include?(slug)
 
   front_matter, body = split_post(post)
-  src = lead_image(body)
+  override = override_image(front_matter, slug)
+  src = override || lead_image(body)
   next skipped += 1 if src.nil?
 
   source = File.join(REPO_ROOT, src.sub(%r{\A/}, ''))
-  next skipped += 1 unless File.exist?(source)
+  unless File.exist?(source)
+    # Silence is fine for a lead image the sweep never vendored, but an explicit
+    # `preview_image:` pointing at nothing is a typo the author wants told about —
+    # otherwise the post draws the empty slot and the override looks like it worked.
+    warn "  ! #{slug}: preview_image #{src} is not on disk" if override
+    next skipped += 1
+  end
 
   dest = File.join(PREVIEWS_DIR, "#{slug}.webp")
 

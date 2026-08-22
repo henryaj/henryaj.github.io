@@ -183,17 +183,38 @@ What qualifies, and why each test is there:
   put it at character ~13; the next-earliest in the corpus is 1063 in, which is
   illustration rather than title art. This is the test that actually distinguishes
   the two. Both `<img>` and `![]()` are scanned and the earlier taken — Substack
-  posts are all the former, the WordPress-era ones the latter.
+  posts are all the former, the WordPress-era ones the latter. `preview_image:` in
+  the front matter names a source outright and is the one way past this test, for a
+  post whose title art isn't at the top — *Don't screw the crew* carries one because
+  its only image is 10,819 characters in. It bypasses the window and nothing else:
+  the path still has to be under `/images/`, on disk and wide enough, since those are
+  about whether a usable sliver can be cut at all.
 - **Local `/images/` src.** A post still hotlinking its opener has nothing to cut from.
 - **At least 224px wide**, the drawn width — below that the sliver is upscaled rather
   than merely under-dense.
 
-`preview_crop:` aside, nothing about a post's front matter affects this, and the
-Substack sweep only rewrites bodies — an override added by hand survives a re-sync.
+`preview_crop:` and `preview_image:` aside, nothing about a post's front matter
+affects this, and the Substack sweep only rewrites bodies — an override added by hand
+survives a re-sync.
 
-Only the posts in `_data/substack.json` — the five the homepage lists — get a
-thumbnail. About 50 of the 152 posts qualify, and cutting all of them would commit
-ten times the bytes to serve five of them. Move the list `SOURCE_LIST` points at if
+**The homepage list is four recent plus a pin.** `pinned_post:` in `_config.yml`
+holds a permalink that takes the fifth slot; blank it or comment it out and the list
+goes back to five recent. `index.html` concatenates the two arrays rather than
+rendering the pinned entry separately — a `substack.json` entry and a Jekyll document
+both answer to `.title`/`.url`/`.subtitle`, so one loop covers both, and a
+`pinned_post` naming a URL that doesn't exist yields an empty array and simply
+shortens the list rather than breaking the page. Both sides drop the pin out of the
+recent list before taking four of them, so pinning a post that is also one of the most
+recent moves it to the foot rather than listing it twice. `build_previews.rb` reads the
+same switch, or it would cut a thumbnail for a post that is no longer on show and none
+for the one that is. It parses `_config.yml` with `aliases: true`: the config uses YAML
+anchors, Psych refuses them by default, and without the flag every read raises — a
+failure whose only symptom is the wrong post having a thumbnail. The current pin,
+*Don't screw the crew*, has its first image 10,819 characters in, well past the lead
+window, so it names it with `preview_image:` rather than draw the empty slot.
+
+Only the posts the homepage lists get a thumbnail. About 50 of the 152 posts
+qualify, and cutting all of them would commit ten times the bytes to serve five of them. Move the list `SOURCE_LIST` points at if
 they're ever wanted on `/writing/` too.
 
 Three things the script has to get right, all of which it originally didn't:

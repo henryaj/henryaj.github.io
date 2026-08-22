@@ -1,6 +1,6 @@
 {
-  "cached-identities": {
-    "src": "/images/previews/cached-identities.webp",
+  "dont-screw-the-crew": {
+    "src": "/images/previews/dont-screw-the-crew.webp",
     "width": 448,
     "height": 64
   },
@@ -11,6 +11,11 @@
   },
   "the-prescription-only-gray-area": {
     "src": "/images/previews/the-prescription-only-gray-area.webp",
+    "width": 448,
+    "height": 64
+  },
+  "the-sloppification-of-peptides": {
+    "src": "/images/previews/the-sloppification-of-peptides.webp",
     "width": 448,
     "height": 64
   },

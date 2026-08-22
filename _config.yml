@@ -5,6 +5,13 @@ email: &email henry@henrystanley.com
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.henrystanley.com"
 
+# Pins one post to the foot of the homepage's Writing list, in place of the fifth
+# most recent — four recent, then this. Blank it or comment it out to turn the pin
+# off and go back to five recent. The value is the post's permalink, and it also
+# tells _scripts/build_previews.rb which posts are on show, so re-run `just previews`
+# after changing it.
+pinned_post: "/dont-screw-the-crew/"
+
 markdown: kramdown
 
 timezone: UTC

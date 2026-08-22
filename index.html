@@ -213,7 +213,12 @@ title: Henry Stanley
     /* Dots on a 4px pitch rather than a dotted border, which renders ragged at
        subpixel widths — and 4px is the pitch the portrait is dithered on. */
     .piece .lead {
-      flex: 1 1 auto;
+      /* A floor rather than `1 1 auto`: with a basis of auto a title long enough to
+         need the whole line shrank the leader to zero width and it vanished, which
+         read as a missing rule on exactly the rows that wrap. It can grow but not
+         shrink, so the title wraps a word earlier instead and the leader always
+         draws. */
+      flex: 1 0 3em;
       height: 4px;
       transform: translateY(-0.35em);
       background-image: radial-gradient(circle at 1px 50%, #bfbfbf 1px, transparent 1.2px);
@@ -284,7 +289,23 @@ title: Henry Stanley
     </ul>
   </aside>
   {% endif %}
-  {% for post in site.data.substack %}
+  {%- comment %}
+    The list is normally the five most recent. With site.pinned_post set it's the
+    four most recent plus that post, which is why the two arrays are concatenated
+    rather than the pinned one rendered separately: substack.json's entries and a
+    Jekyll document both answer to .title/.url/.subtitle, so one loop covers both.
+    A pinned_post naming a URL that doesn't exist yields an empty array and simply
+    shortens the list, rather than breaking the page. The pin is filtered out of the
+    recent four before they're sliced, so pinning a post that is also one of the most
+    recent moves it to the foot of the list instead of listing it twice.
+  {%- endcomment %}
+  {%- assign listed = site.data.substack %}
+  {%- if site.pinned_post and site.pinned_post != "" %}
+    {%- assign recent = site.data.substack | where_exp: "entry", "entry.url != site.pinned_post" | slice: 0, 4 %}
+    {%- assign pin = site.posts | where: "url", site.pinned_post %}
+    {%- assign listed = recent | concat: pin %}
+  {%- endif %}
+  {% for post in listed %}
   {%- assign piece_slug = post.url | remove_first: "/" | replace: "/", "" %}
   {%- assign thumb = site.data.previews[piece_slug] %}
   <div class="piece">
