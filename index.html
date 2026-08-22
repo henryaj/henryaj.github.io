@@ -284,7 +284,7 @@ title: Henry Stanley
   {% for post in site.data.substack %}
   <div class="piece">
     <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span><span class="date">{{ post.date }}</span></div>
-    {% if post.subtitle and post.subtitle != "" %}<div class="gloss">{{ post.subtitle }}</div>{% endif %}
+    {%- assign gloss = post.subtitle | strip %}{% if gloss != "" %}<div class="gloss">{{ gloss | escape }}</div>{% endif %}
   </div>
   {% endfor %}
   </div>
