@@ -1,5 +1,11 @@
 [
   {
+    "title": "Living at the hinge of history",
+    "url": "/living-at-the-hinge-of-history/",
+    "date": "Aug 22",
+    "subtitle": "It's an insane time to be alive"
+  },
+  {
     "title": "Why do smart people get oneshotted by animal welfare?",
     "url": "/why-do-smart-people-get-oneshotted/",
     "date": "Aug 16",
@@ -22,11 +28,5 @@
     "url": "/cached-identities/",
     "date": "Jul 26",
     "subtitle": "Against identity-based motivation"
-  },
-  {
-    "title": "Maybe it was worse to be right about AI",
-    "url": "/maybe-it-was-worse-to-be-right-about/",
-    "date": "Jul 19",
-    "subtitle": "When the prophecy is wrong-making"
   }
 ]
