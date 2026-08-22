@@ -1,0 +1,27 @@
+    /* Preview thumbnails for the homepage's Writing list. The images are cut by
+       _scripts/build_previews.rb, which smart-crops whatever a post opens on down to
+       a 224x32 sliver; this is only how they sit on the page. Bare CSS, included
+       inside the <style> of index.html — the same arrangement typography.html uses,
+       for the same reason: wrapping it in a <style> element of its own closes the
+       enclosing block early and dumps the rest of the page's CSS out as text.
+
+       The slot is declared on every entry, not just the ones with an image. Only 4
+       of the 5 listed posts have a lead image at any given time, and if the column
+       came and went the dotted leaders would terminate at a different x on each row
+       — which reads as broken rather than as sparse. An entry with no image gets an
+       empty div of the same width.
+
+       The thumbnail is a second link to a destination the title already names, so
+       the markup keeps it out of the tab order and out of the accessibility tree. */
+    .thumb { flex: 0 0 224px; display: block; }
+    /* The file is cut at 2x, so it's drawn at the 224px the script's DISPLAY_W names
+       rather than at its own width. width/height attributes plus height:auto reserve
+       the space before the file lands: entries shifting as they decode would be worse
+       than having no thumbnails at all. */
+    .thumb img { display: block; width: 224px; height: auto; }
+    /* Below 34em the fixed 224px is most of the content width, and the title
+       — which is the thing the row is actually for — collapses to a stack of two- and
+       three-word lines. The whole column goes rather than shrinks: the alignment
+       argument above only asks that every row agree, and at this width they agree on
+       having none. Same breakpoint as the rest of the page's narrow rules. */
+    @media (max-width: 34em) { .thumb { display: none; } }

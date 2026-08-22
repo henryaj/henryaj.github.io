@@ -18,6 +18,7 @@ title: Henry Stanley
   <link rel="preload" as="font" type="font/woff2" href="/public/fonts/figtree-latin.woff2" crossorigin>
   <style>
 {% include typography.html %}
+{% include previews.html %}
 
     body {
       font-family: var(--serif);
@@ -192,9 +193,6 @@ title: Henry Stanley
       margin: 0 0 0.14em;
     }
     .strap, .eyebrow { font-family: var(--pixel); font-size: 14px; letter-spacing: 1px; -webkit-font-smoothing: none; }
-    /* Dates are read as data, not as a label, so they sit in the text face with
-       oldstyle figures rather than in the pixel font the section labels use. */
-    .date { font-family: var(--serif); font-size: 0.95rem; font-variant-numeric: oldstyle-nums; }
     .strap { color: var(--quiet); margin: 0 0 1.5em; }
     .eyebrow {
       color: var(--ink);
@@ -207,7 +205,10 @@ title: Henry Stanley
     }
     .eyebrow a { font-family: var(--pixel); font-size: 14px; }
 
-    .piece { margin: 0 0 0.85em; }
+    .piece { margin: 0 0 0.85em; display: flex; align-items: center; gap: 1.1em; }
+    /* min-width:0 or a long title refuses to let the flex item shrink and pushes the
+       thumbnail off the measure. */
+    .piece-text { flex: 1 1 auto; min-width: 0; }
     .piece .line { display: flex; align-items: baseline; gap: 0.7em; }
     /* Dots on a 4px pitch rather than a dotted border, which renders ragged at
        subpixel widths — and 4px is the pitch the portrait is dithered on. */
@@ -218,7 +219,6 @@ title: Henry Stanley
       background-image: radial-gradient(circle at 1px 50%, #bfbfbf 1px, transparent 1.2px);
       background-size: 4px 4px;
     }
-    .piece .date { color: var(--quiet); white-space: nowrap; }
     .piece .gloss { font-size: 1.05rem; font-style: italic; color: var(--quiet); line-height: 1.35; }
 
     /* Wider column gap than row gap: with no thumbnail to bound them, the two
@@ -229,7 +229,10 @@ title: Henry Stanley
     .card .d { font-size: 1.05rem; font-style: italic; color: var(--quiet); line-height: 1.3; }
     .card:hover .t { color: var(--accent-deep); }
 
-    @media (max-width: 34em) { .grid { grid-template-columns: 1fr; } .name { font-size: 3rem; } }
+    /* The leader points the eye from the title to the thumbnail. Below 34em the
+       thumbnail column is gone (see previews.html), so it points at the end of the
+       row and reads as a stray rule. The date it used to run to is gone too. */
+    @media (max-width: 34em) { .grid { grid-template-columns: 1fr; } .name { font-size: 3rem; } .piece .lead { display: none; } }
   </style>
 </head>
 <body>
@@ -282,9 +285,15 @@ title: Henry Stanley
   </aside>
   {% endif %}
   {% for post in site.data.substack %}
+  {%- assign piece_slug = post.url | remove_first: "/" | replace: "/", "" %}
+  {%- assign thumb = site.data.previews[piece_slug] %}
   <div class="piece">
-    <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span><span class="date">{{ post.date }}</span></div>
-    {%- assign gloss = post.subtitle | strip %}{% if gloss != "" %}<div class="gloss">{{ gloss | escape }}</div>{% endif %}
+    <div class="piece-text">
+      <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span></div>
+      {%- assign gloss = post.subtitle | strip %}{% if gloss != "" %}<div class="gloss">{{ gloss | escape }}</div>{% endif %}
+    </div>
+    {%- if thumb %}<a class="thumb" href="{{ post.url }}" tabindex="-1" aria-hidden="true"><img src="{{ thumb.src }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt=""></a>
+    {%- else %}<div class="thumb" aria-hidden="true"></div>{% endif %}
   </div>
   {% endfor %}
   </div>

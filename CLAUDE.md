@@ -136,6 +136,94 @@ cards are out for a different reason: only three of the eight destinations have 
 icon, and a grid where some cells are indented and some aren't reads as broken rather
 than as annotated.
 
+### Homepage preview thumbnails
+
+Each entry in the homepage's Writing list carries a 224x32 sliver at the right edge
+of the measure, cut from the image the post opens on — 7:1, so it reads as a band of
+colour beside the title rather than as a picture in its own right. The homepage list
+carries no date any more; the dotted leader runs from the title to the image.
+`_scripts/build_previews.rb` (`just previews`, folded into `just sync`) writes
+`images/previews/<slug>.webp` at 2x plus a `_data/previews.json` of slug →
+src/width/height, which is what `index.html` keys off. The CSS is
+`_includes/previews.html`: bare rules included inside index.html's `<style>`, the
+typography.html arrangement rather than a `<style>` element of its own — wrapping it
+in one closes the enclosing block early and dumps the rest of the page's CSS onto
+the page as text.
+
+**The crop is the whole point, and 7:1 is a hard ratio to crop to.** Almost every
+post opens on a painting in portrait format, so the sliver keeps a few percent of
+the frame and where those rows land decides whether the thumbnail reads as anything
+at all. All three of libvips' strategies were cut at 448x64 against the four
+paintings currently listed and looked at; none of what follows is inferred:
+
+- `centre` is out. It takes the Friedrich at chest height and loses the wanderer's
+  head entirely, which is the failure that rules it out at every ratio tried.
+- `attention` (saliency) and `entropy` (texture) are close at this ratio, and closer than
+  they are anywhere else. `entropy` actually frames the carcass in Rembrandt's
+  *Slaughtered Ox*, which `attention` misses in favour of the pale timber arch above
+  it. On the other three they're near-equivalent, and both clip the Friedrich's head.
+- `attention` is kept anyway, for robustness rather than for that scoreboard. The
+  five listed posts rotate, and the corpus's openers include screenshots, charts and
+  photographs as well as paintings; saliency degrades more gracefully on those than
+  texture does. At the 10:1 band this feature started as, the gap was wide and in
+  `attention`'s favour — `entropy` decapitated the Friedrich and framed the
+  Waterhouse on bare breasts.
+
+Rembrandt is the known miss — `attention` gives that one a pale band with a dark arc
+through it — so a post can override the crop with `preview_crop:` in its front
+matter, a fraction of the image's height naming where the band comes from. The ox
+carries `preview_crop: 0.5` and the carcass shows. Only the vertical is settable,
+which is where it matters: these are portrait sources, so the width is barely cropped
+at all. A post's own mtime counts towards staleness, which is what makes adding or
+changing the value take effect on the next run.
+
+What qualifies, and why each test is there:
+
+- **First image within 400 characters of the body.** Posts that lead with a figure
+  put it at character ~13; the next-earliest in the corpus is 1063 in, which is
+  illustration rather than title art. This is the test that actually distinguishes
+  the two. Both `<img>` and `![]()` are scanned and the earlier taken — Substack
+  posts are all the former, the WordPress-era ones the latter.
+- **Local `/images/` src.** A post still hotlinking its opener has nothing to cut from.
+- **At least 224px wide**, the drawn width — below that the sliver is upscaled rather
+  than merely under-dense.
+
+`preview_crop:` aside, nothing about a post's front matter affects this, and the
+Substack sweep only rewrites bodies — an override added by hand survives a re-sync.
+
+Only the posts in `_data/substack.json` — the five the homepage lists — get a
+thumbnail. About 50 of the 152 posts qualify, and cutting all of them would commit
+ten times the bytes to serve five of them. Move the list `SOURCE_LIST` points at if
+they're ever wanted on `/writing/` too.
+
+Three things the script has to get right, all of which it originally didn't:
+
+- **Staleness is not just mtime.** A thumbnail is re-cut when its source is newer
+  *or* when what's on disk isn't the size the constants now name. Without the second
+  test, changing the rectangle leaves every existing file at the old proportions
+  while the JSON advertises the new ones, and nothing but `rm -rf` fixes it. This one
+  earned itself several times over — the shape went 10.25:1 band → 3:2 → 5:3 → 8:1 → 7:1
+  before it settled.
+- **An empty result means the tooling broke, not that the archive changed.**
+  `vipsheader` is shelled out to with stderr swallowed, so with no libvips on PATH
+  every post falls out at the dimensions check — and the sweep that deletes
+  thumbnails whose post no longer qualifies would then delete all of them and blank
+  the JSON, which `just sync` commits and pushes unattended. Same guard, and the
+  same reasoning, as the empty `/api/v1/posts` sweep above. It `exit 0`s rather than
+  aborting, so a missing libvips doesn't also stop `just sync` committing the posts
+  and stats it just pulled.
+- **The file on disk is the authority on its own size.** The JSON's width/height are
+  read back off the cut file rather than from the target, because attributes that
+  disagree with the file cause exactly the layout shift they exist to prevent.
+
+The slot is declared on every entry, image or not. Only 4 of the 5 listed posts have
+a lead image at any given time, and a column that came and went would leave the
+dotted leaders terminating at a different x on each row — sparse reads fine, ragged
+reads broken. Below 34em the column is hidden outright rather than shrunk: at that
+width 224px is most of the line, and every row agreeing on having none satisfies the
+same argument. Each thumbnail is a second link to a destination its title already
+names, so it's `aria-hidden` and out of the tab order.
+
 ### Building the body-face subsets
 
 `public/fonts/crimsonpro-*.woff2` are built by hand from the upstream variable

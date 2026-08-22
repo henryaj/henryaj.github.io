@@ -2,6 +2,9 @@
 layout: post
 title: "Why do smart people get oneshotted by animal welfare?"
 subtitle: "Maybe they need more protein"
+# attention picks the pale timber arch over the carcass in this one; take the band
+# from halfway down instead.
+preview_crop: 0.5
 date: 2026-08-16 10:34:19 +0000
 canonical_url: https://henryaj.substack.com/p/why-do-smart-people-get-oneshotted
 source: substack

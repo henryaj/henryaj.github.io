@@ -1,0 +1,22 @@
+{
+  "cached-identities": {
+    "src": "/images/previews/cached-identities.webp",
+    "width": 448,
+    "height": 64
+  },
+  "living-at-the-hinge-of-history": {
+    "src": "/images/previews/living-at-the-hinge-of-history.webp",
+    "width": 448,
+    "height": 64
+  },
+  "the-prescription-only-gray-area": {
+    "src": "/images/previews/the-prescription-only-gray-area.webp",
+    "width": 448,
+    "height": 64
+  },
+  "why-do-smart-people-get-oneshotted": {
+    "src": "/images/previews/why-do-smart-people-get-oneshotted.webp",
+    "width": 448,
+    "height": 64
+  }
+}
