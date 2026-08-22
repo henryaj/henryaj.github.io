@@ -194,7 +194,10 @@ front matter by regex. That divergence caused real bugs, so CI no longer runs it
 and just builds what's in the repo.
 
 Post front matter carries `subtitle:` (the Substack subtitle, taken from the RSS
-`description`), which the homepage sets under each entry.
+`description`), which the homepage sets under each entry and the post page sets as a
+`.deck` under the title — italic Crimson Pro rather than the display face, since it's
+the author's sentence about the piece and not a second heading. Only 22 of the posts
+carry one, so it's conditional in both places.
 
 ### Images and embeds
 
