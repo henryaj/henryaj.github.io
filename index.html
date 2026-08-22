@@ -229,7 +229,10 @@ title: Henry Stanley
     .card .d { font-size: 1.05rem; font-style: italic; color: var(--quiet); line-height: 1.3; }
     .card:hover .t { color: var(--accent-deep); }
 
-    @media (max-width: 34em) { .grid { grid-template-columns: 1fr; } .name { font-size: 3rem; } }
+    /* The leader points the eye from the title to the thumbnail. Below 34em the
+       thumbnail column is gone (see previews.html), so it points at the end of the
+       row and reads as a stray rule. The date it used to run to is gone too. */
+    @media (max-width: 34em) { .grid { grid-template-columns: 1fr; } .name { font-size: 3rem; } .piece .lead { display: none; } }
   </style>
 </head>
 <body>
