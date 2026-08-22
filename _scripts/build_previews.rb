@@ -1,17 +1,17 @@
 #!/usr/bin/env ruby
-# Cuts a small preview thumbnail from the image a post opens on, for the homepage's
-# Writing list. Idempotent: a thumbnail already on disk,
-# newer than its source and cut to the current target size is left alone, so
-# re-running after a sync only cuts the new posts.
+# Cuts a 224x28 preview sliver from the image a post opens on, for the homepage's
+# Writing list. Idempotent: a thumbnail already on disk, newer than its source and
+# cut to the current target size is left alone, so re-running after a sync only cuts
+# the new posts.
 #
-# The crop is the whole point. Almost every post opens on a painting in portrait
-# format, so even a 5:3 rectangle throws away most of the frame and a centred box
-# reliably lands on torsos and floorboards. libvips' `attention` interesting-strategy
-# scores the image for saliency and centres the crop on that instead — it finds the
-# four faces in Waterhouse's Danaides, the wanderer's figure in the Friedrich and the
-# carcass in Rembrandt's very dark Slaughtered Ox, all three of which `centre`
-# decapitates. `entropy` is close at this ratio and not the obvious loser it is at a
-# wider one; see CLAUDE.md for why `attention` still gets the job.
+# The crop is the whole point, and 8:1 is a hard ratio to crop to. Almost every post
+# opens on a painting in portrait format, so the sliver keeps a few percent of the
+# frame. libvips' `attention` (saliency) is used over `entropy` (texture) and
+# `centre`: `centre` loses the wanderer's head in the Friedrich outright, and while
+# `entropy` is close at this ratio — it actually frames the carcass in Rembrandt's
+# Slaughtered Ox, which `attention` misses — saliency degrades more gracefully on the
+# screenshots and charts that also open posts. All three were cut and looked at; see
+# CLAUDE.md for what each one did.
 require 'json'
 require 'set'
 require 'fileutils'
@@ -30,13 +30,13 @@ SOURCE_LIST   = File.join(REPO_ROOT, '_data', 'substack.json')
 # corpus is 1063 characters in, which is illustration rather than title art.
 LEAD_WINDOW = 400
 # Never invent pixels: a source narrower than the drawn width is being upscaled
-# rather than merely under-dense. It's a low bar by design — the lead-window test
-# above is what separates title art from an inline illustration, and this one only
-# rejects sources too small to fill the rectangle honestly.
-MIN_WIDTH   = 120
+# rather than merely under-dense. The lead-window test above is what separates title
+# art from an inline illustration; this one only rejects sources too small to fill the
+# rectangle honestly.
+MIN_WIDTH   = 224
 # The thumbnail as the homepage draws it.
-DISPLAY_W   = 120
-DISPLAY_H   = 72
+DISPLAY_W   = 224
+DISPLAY_H   = 28
 # 2x for retina, but never upscaled past the source (see target_size).
 MAX_W       = DISPLAY_W * 2
 
@@ -73,7 +73,7 @@ end
 # neighbours, which is why the height is derived rather than fixed — and why the
 # source's *height* bounds the width too. MIN_WIDTH only guards the horizontal, so a
 # wide, short source (a banner, a screenshot strip) clears it and would then be
-# scaled up vertically to cover the 5:3 crop.
+# scaled up vertically to cover the 8:1 crop.
 def target_size(source_width, source_height)
   w = [MAX_W, source_width, (source_height * DISPLAY_W.to_f / DISPLAY_H).floor].min
   [w, (w * DISPLAY_H.to_f / DISPLAY_W).round]

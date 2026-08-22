@@ -193,9 +193,6 @@ title: Henry Stanley
       margin: 0 0 0.14em;
     }
     .strap, .eyebrow { font-family: var(--pixel); font-size: 14px; letter-spacing: 1px; -webkit-font-smoothing: none; }
-    /* Dates are read as data, not as a label, so they sit in the text face with
-       oldstyle figures rather than in the pixel font the section labels use. */
-    .date { font-family: var(--serif); font-size: 0.95rem; font-variant-numeric: oldstyle-nums; }
     .strap { color: var(--quiet); margin: 0 0 1.5em; }
     .eyebrow {
       color: var(--ink);
@@ -222,7 +219,6 @@ title: Henry Stanley
       background-image: radial-gradient(circle at 1px 50%, #bfbfbf 1px, transparent 1.2px);
       background-size: 4px 4px;
     }
-    .piece .date { color: var(--quiet); white-space: nowrap; }
     .piece .gloss { font-size: 1.05rem; font-style: italic; color: var(--quiet); line-height: 1.35; }
 
     /* Wider column gap than row gap: with no thumbnail to bound them, the two
@@ -290,7 +286,7 @@ title: Henry Stanley
   {%- assign thumb = site.data.previews[piece_slug] %}
   <div class="piece">
     <div class="piece-text">
-      <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span><span class="date">{{ post.date }}</span></div>
+      <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span></div>
       {%- assign gloss = post.subtitle | strip %}{% if gloss != "" %}<div class="gloss">{{ gloss | escape }}</div>{% endif %}
     </div>
     {%- if thumb %}<a class="thumb" href="{{ post.url }}" tabindex="-1" aria-hidden="true"><img src="{{ thumb.src }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt=""></a>

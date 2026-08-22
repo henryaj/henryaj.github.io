@@ -138,8 +138,10 @@ than as annotated.
 
 ### Homepage preview thumbnails
 
-Each entry in the homepage's Writing list carries a 120x72 thumbnail at the right
-edge of the measure, cut from the image the post opens on.
+Each entry in the homepage's Writing list carries a 224x28 sliver at the right edge
+of the measure, cut from the image the post opens on — 8:1, so it reads as a band of
+colour beside the title rather than as a picture in its own right. The homepage list
+carries no date any more; the dotted leader runs from the title to the image.
 `_scripts/build_previews.rb` (`just previews`, folded into `just sync`) writes
 `images/previews/<slug>.webp` at 2x plus a `_data/previews.json` of slug →
 src/width/height, which is what `index.html` keys off. The CSS is
@@ -148,23 +150,27 @@ typography.html arrangement rather than a `<style>` element of its own — wrapp
 in one closes the enclosing block early and dumps the rest of the page's CSS onto
 the page as text.
 
-**The crop is the whole point.** Almost every post opens on a painting in portrait
-format, so even a 5:3 rectangle discards most of the frame and a centred box lands
-on torsos and floorboards. libvips' `attention` interesting-strategy scores for
-saliency and centres on that: it finds the four faces in Waterhouse's *Danaides*,
-the wanderer's figure in the Friedrich and the carcass in Rembrandt's very dark
-*Slaughtered Ox*, all three of which `centre` decapitates.
+**The crop is the whole point, and 8:1 is a hard ratio to crop to.** Almost every
+post opens on a painting in portrait format, so the sliver keeps a few percent of
+the frame and where those rows land decides whether the thumbnail reads as anything
+at all. All three of libvips' strategies were cut at 448x56 against the four
+paintings currently listed and looked at; none of what follows is inferred:
 
-`entropy`, the other candidate, is not the obvious loser here that it is at a wider
-ratio, and the note that used to say so was written against the 10.25:1 band this
-started as. At 10:1 it chased raw texture — it decapitated the Friedrich and framed
-the Waterhouse on bare breasts — while `attention` missed the ox entirely and took
-the timber arch above it. Recut at 5:3 the two are close: `entropy` actually frames
-the ox and the Friedrich better, favouring whole-frame detail where `attention`
-favours faces. `attention` still gets the job, on the Waterhouse — a crop that reads
-as a row of faces rather than as nudity is the one that matters on a personal site,
-and that difference doesn't go away at any ratio. Both were checked at 5:3 against
-all four of the paintings currently listed; neither claim is inferred.
+- `centre` is out. It takes the Friedrich at chest height and loses the wanderer's
+  head entirely, which is the failure that rules it out at every ratio tried.
+- `attention` (saliency) and `entropy` (texture) are close at 8:1, and closer than
+  they are anywhere else. `entropy` actually frames the carcass in Rembrandt's
+  *Slaughtered Ox*, which `attention` misses in favour of the pale timber arch above
+  it. On the other three they're near-equivalent, and both clip the Friedrich's head.
+- `attention` is kept anyway, for robustness rather than for that scoreboard. The
+  five listed posts rotate, and the corpus's openers include screenshots, charts and
+  photographs as well as paintings; saliency degrades more gracefully on those than
+  texture does. At the 10:1 band this feature started as, the gap was wide and in
+  `attention`'s favour — `entropy` decapitated the Friedrich and framed the
+  Waterhouse on bare breasts.
+
+So Rembrandt is a known miss: that thumbnail is a pale band with a dark arc through
+it. It is the price of the ratio, not a bug in the pipeline.
 
 What qualifies, and why each test is there:
 
@@ -174,9 +180,8 @@ What qualifies, and why each test is there:
   the two. Both `<img>` and `![]()` are scanned and the earlier taken — Substack
   posts are all the former, the WordPress-era ones the latter.
 - **Local `/images/` src.** A post still hotlinking its opener has nothing to cut from.
-- **At least 120px wide**, the drawn width — below that the thumbnail is upscaled
-  rather than merely under-dense. A deliberately low bar; the lead-window
-  test above is doing the real filtering.
+- **At least 224px wide**, the drawn width — below that the sliver is upscaled rather
+  than merely under-dense.
 
 Only the posts in `_data/substack.json` — the five the homepage lists — get a
 thumbnail. About 50 of the 152 posts qualify, and cutting all of them would commit
@@ -188,13 +193,17 @@ Three things the script has to get right, all of which it originally didn't:
 - **Staleness is not just mtime.** A thumbnail is re-cut when its source is newer
   *or* when what's on disk isn't the size the constants now name. Without the second
   test, changing the rectangle leaves every existing file at the old proportions
-  while the JSON advertises the new ones, and nothing but `rm -rf` fixes it.
+  while the JSON advertises the new ones, and nothing but `rm -rf` fixes it. This one
+  earned itself several times over — the shape went 10.25:1 band → 3:2 → 5:3 → 8:1
+  before it settled.
 - **An empty result means the tooling broke, not that the archive changed.**
   `vipsheader` is shelled out to with stderr swallowed, so with no libvips on PATH
   every post falls out at the dimensions check — and the sweep that deletes
   thumbnails whose post no longer qualifies would then delete all of them and blank
   the JSON, which `just sync` commits and pushes unattended. Same guard, and the
-  same reasoning, as the empty `/api/v1/posts` sweep above.
+  same reasoning, as the empty `/api/v1/posts` sweep above. It `exit 0`s rather than
+  aborting, so a missing libvips doesn't also stop `just sync` committing the posts
+  and stats it just pulled.
 - **The file on disk is the authority on its own size.** The JSON's width/height are
   read back off the cut file rather than from the target, because attributes that
   disagree with the file cause exactly the layout shift they exist to prevent.
@@ -202,7 +211,9 @@ Three things the script has to get right, all of which it originally didn't:
 The slot is declared on every entry, image or not. Only 4 of the 5 listed posts have
 a lead image at any given time, and a column that came and went would leave the
 dotted leaders terminating at a different x on each row — sparse reads fine, ragged
-reads broken. Each thumbnail is a second link to a destination its title already
+reads broken. Below 34em the column is hidden outright rather than shrunk: at that
+width 224px is most of the line, and every row agreeing on having none satisfies the
+same argument. Each thumbnail is a second link to a destination its title already
 names, so it's `aria-hidden` and out of the tab order.
 
 ### Building the body-face subsets
