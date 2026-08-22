@@ -18,6 +18,7 @@ title: Henry Stanley
   <link rel="preload" as="font" type="font/woff2" href="/public/fonts/figtree-latin.woff2" crossorigin>
   <style>
 {% include typography.html %}
+{% include previews.html %}
 
     body {
       font-family: var(--serif);
@@ -207,7 +208,10 @@ title: Henry Stanley
     }
     .eyebrow a { font-family: var(--pixel); font-size: 14px; }
 
-    .piece { margin: 0 0 0.85em; }
+    .piece { margin: 0 0 0.85em; display: flex; align-items: center; gap: 1.1em; }
+    /* min-width:0 or a long title refuses to let the flex item shrink and pushes the
+       thumbnail off the measure. */
+    .piece-text { flex: 1 1 auto; min-width: 0; }
     .piece .line { display: flex; align-items: baseline; gap: 0.7em; }
     /* Dots on a 4px pitch rather than a dotted border, which renders ragged at
        subpixel widths — and 4px is the pitch the portrait is dithered on. */
@@ -282,9 +286,15 @@ title: Henry Stanley
   </aside>
   {% endif %}
   {% for post in site.data.substack %}
+  {%- assign piece_slug = post.url | remove_first: "/" | replace: "/", "" %}
+  {%- assign thumb = site.data.previews[piece_slug] %}
   <div class="piece">
-    <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span><span class="date">{{ post.date }}</span></div>
-    {%- assign gloss = post.subtitle | strip %}{% if gloss != "" %}<div class="gloss">{{ gloss | escape }}</div>{% endif %}
+    <div class="piece-text">
+      <div class="line"><a href="{{ post.url }}">{{ post.title }}</a><span class="lead"></span><span class="date">{{ post.date }}</span></div>
+      {%- assign gloss = post.subtitle | strip %}{% if gloss != "" %}<div class="gloss">{{ gloss | escape }}</div>{% endif %}
+    </div>
+    {%- if thumb %}<a class="thumb" href="{{ post.url }}" tabindex="-1" aria-hidden="true"><img src="{{ thumb.src }}" width="{{ thumb.width }}" height="{{ thumb.height }}" alt=""></a>
+    {%- else %}<div class="thumb" aria-hidden="true"></div>{% endif %}
   </div>
   {% endfor %}
   </div>

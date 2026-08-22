@@ -136,6 +136,75 @@ cards are out for a different reason: only three of the eight destinations have 
 icon, and a grid where some cells are indented and some aren't reads as broken rather
 than as annotated.
 
+### Homepage preview thumbnails
+
+Each entry in the homepage's Writing list carries a 120x72 thumbnail at the right
+edge of the measure, cut from the image the post opens on.
+`_scripts/build_previews.rb` (`just previews`, folded into `just sync`) writes
+`images/previews/<slug>.webp` at 2x plus a `_data/previews.json` of slug →
+src/width/height, which is what `index.html` keys off. The CSS is
+`_includes/previews.html`: bare rules included inside index.html's `<style>`, the
+typography.html arrangement rather than a `<style>` element of its own — wrapping it
+in one closes the enclosing block early and dumps the rest of the page's CSS onto
+the page as text.
+
+**The crop is the whole point.** Almost every post opens on a painting in portrait
+format, so even a 5:3 rectangle discards most of the frame and a centred box lands
+on torsos and floorboards. libvips' `attention` interesting-strategy scores for
+saliency and centres on that: it finds the four faces in Waterhouse's *Danaides*,
+the wanderer's figure in the Friedrich and the carcass in Rembrandt's very dark
+*Slaughtered Ox*, all three of which `centre` decapitates.
+
+`entropy`, the other candidate, is not the obvious loser here that it is at a wider
+ratio, and the note that used to say so was written against the 10.25:1 band this
+started as. At 10:1 it chased raw texture — it decapitated the Friedrich and framed
+the Waterhouse on bare breasts — while `attention` missed the ox entirely and took
+the timber arch above it. Recut at 5:3 the two are close: `entropy` actually frames
+the ox and the Friedrich better, favouring whole-frame detail where `attention`
+favours faces. `attention` still gets the job, on the Waterhouse — a crop that reads
+as a row of faces rather than as nudity is the one that matters on a personal site,
+and that difference doesn't go away at any ratio. Both were checked at 5:3 against
+all four of the paintings currently listed; neither claim is inferred.
+
+What qualifies, and why each test is there:
+
+- **First image within 400 characters of the body.** Posts that lead with a figure
+  put it at character ~13; the next-earliest in the corpus is 1063 in, which is
+  illustration rather than title art. This is the test that actually distinguishes
+  the two. Both `<img>` and `![]()` are scanned and the earlier taken — Substack
+  posts are all the former, the WordPress-era ones the latter.
+- **Local `/images/` src.** A post still hotlinking its opener has nothing to cut from.
+- **At least 120px wide**, the drawn width — below that the thumbnail is upscaled
+  rather than merely under-dense. A deliberately low bar; the lead-window
+  test above is doing the real filtering.
+
+Only the posts in `_data/substack.json` — the five the homepage lists — get a
+thumbnail. About 50 of the 152 posts qualify, and cutting all of them would commit
+ten times the bytes to serve five of them. Move the list `SOURCE_LIST` points at if
+they're ever wanted on `/writing/` too.
+
+Three things the script has to get right, all of which it originally didn't:
+
+- **Staleness is not just mtime.** A thumbnail is re-cut when its source is newer
+  *or* when what's on disk isn't the size the constants now name. Without the second
+  test, changing the rectangle leaves every existing file at the old proportions
+  while the JSON advertises the new ones, and nothing but `rm -rf` fixes it.
+- **An empty result means the tooling broke, not that the archive changed.**
+  `vipsheader` is shelled out to with stderr swallowed, so with no libvips on PATH
+  every post falls out at the dimensions check — and the sweep that deletes
+  thumbnails whose post no longer qualifies would then delete all of them and blank
+  the JSON, which `just sync` commits and pushes unattended. Same guard, and the
+  same reasoning, as the empty `/api/v1/posts` sweep above.
+- **The file on disk is the authority on its own size.** The JSON's width/height are
+  read back off the cut file rather than from the target, because attributes that
+  disagree with the file cause exactly the layout shift they exist to prevent.
+
+The slot is declared on every entry, image or not. Only 4 of the 5 listed posts have
+a lead image at any given time, and a column that came and went would leave the
+dotted leaders terminating at a different x on each row — sparse reads fine, ragged
+reads broken. Each thumbnail is a second link to a destination its title already
+names, so it's `aria-hidden` and out of the tab order.
+
 ### Building the body-face subsets
 
 `public/fonts/crimsonpro-*.woff2` are built by hand from the upstream variable
