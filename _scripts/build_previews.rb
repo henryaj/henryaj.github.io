@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
-# Cuts a 224x32 preview sliver from the image a post opens on, for the homepage's
+# Cuts a 224x47 preview sliver from the image a post opens on, for the homepage's
 # Writing list. Idempotent: a thumbnail already on disk, newer than its source and
 # cut to the current target size is left alone, so re-running after a sync only cuts
 # the new posts.
 #
-# The crop is the whole point, and 7:1 is a hard ratio to crop to. Almost every post
+# The crop is the whole point, and ~4.8:1 is still a hard ratio to crop to. Almost every post
 # opens on a painting in portrait format, so the sliver keeps a few percent of the
 # frame. libvips' `attention` (saliency) is used over `entropy` (texture) and
 # `centre`: `centre` loses the wanderer's head in the Friedrich outright, and while
@@ -42,7 +42,7 @@ LEAD_WINDOW = 400
 MIN_WIDTH   = 224
 # The thumbnail as the homepage draws it.
 DISPLAY_W   = 224
-DISPLAY_H   = 32
+DISPLAY_H   = 47
 # 2x for retina, but never upscaled past the source (see target_size).
 MAX_W       = DISPLAY_W * 2
 

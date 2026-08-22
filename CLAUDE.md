@@ -138,8 +138,8 @@ than as annotated.
 
 ### Homepage preview thumbnails
 
-Each entry in the homepage's Writing list carries a 224x32 sliver at the right edge
-of the measure, cut from the image the post opens on — 7:1, so it reads as a band of
+Each entry in the homepage's Writing list carries a 224x47 sliver at the right edge
+of the measure, cut from the image the post opens on — about 4.8:1, so it reads as a band of
 colour beside the title rather than as a picture in its own right. The homepage list
 carries no date any more; the dotted leader runs from the title to the image.
 `_scripts/build_previews.rb` (`just previews`, folded into `just sync`) writes
@@ -150,10 +150,10 @@ typography.html arrangement rather than a `<style>` element of its own — wrapp
 in one closes the enclosing block early and dumps the rest of the page's CSS onto
 the page as text.
 
-**The crop is the whole point, and 7:1 is a hard ratio to crop to.** Almost every
+**The crop is the whole point, and ~4.8:1 is still a hard ratio to crop to.** Almost every
 post opens on a painting in portrait format, so the sliver keeps a few percent of
 the frame and where those rows land decides whether the thumbnail reads as anything
-at all. All three of libvips' strategies were cut at 448x64 against the four
+at all. All three of libvips' strategies were cut at 448x94 against the four
 paintings currently listed and looked at; none of what follows is inferred:
 
 - `centre` is out. It takes the Friedrich at chest height and loses the wanderer's
@@ -223,7 +223,7 @@ Three things the script has to get right, all of which it originally didn't:
   *or* when what's on disk isn't the size the constants now name. Without the second
   test, changing the rectangle leaves every existing file at the old proportions
   while the JSON advertises the new ones, and nothing but `rm -rf` fixes it. This one
-  earned itself several times over — the shape went 10.25:1 band → 3:2 → 5:3 → 8:1 → 7:1
+  earned itself several times over — the shape went 10.25:1 band → 3:2 → 5:3 → 8:1 → 7:1 → ~4.8:1
   before it settled.
 - **An empty result means the tooling broke, not that the archive changed.**
   `vipsheader` is shelled out to with stderr swallowed, so with no libvips on PATH

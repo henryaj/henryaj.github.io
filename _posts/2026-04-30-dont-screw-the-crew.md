@@ -4,6 +4,8 @@ title: "Don't screw the crew"
 subtitle: "An open letter to one person I know"
 # The post's only image is 10,819 characters in, past the lead window, so name it.
 preview_image: "/images/substack/dont-screw-the-crew/1.jpg"
+# attention lands the band at 0.248, just above the eyes; two nudges of ~9px down.
+preview_crop: 0.31
 date: 2026-04-30 22:45:37 +0000
 canonical_url: https://henryaj.substack.com/p/dont-screw-the-crew
 source: substack
