@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: bundler
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: nokogiri
+    versions:
+    - 1.11.0
+    - 1.11.1
+  - dependency-name: rubyzip
+    versions:
+    - 2.2.0
+  - dependency-name: github-pages
+    versions:
+    - "202"
