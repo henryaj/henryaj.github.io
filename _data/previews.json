@@ -1,4 +1,9 @@
 {
+  "building-a-better-alcohol-2": {
+    "src": "/images/previews/building-a-better-alcohol-2.webp",
+    "width": 448,
+    "height": 64
+  },
   "dont-screw-the-crew": {
     "src": "/images/previews/dont-screw-the-crew.webp",
     "width": 448,
@@ -6,11 +11,6 @@
   },
   "living-at-the-hinge-of-history": {
     "src": "/images/previews/living-at-the-hinge-of-history.webp",
-    "width": 448,
-    "height": 64
-  },
-  "the-prescription-only-gray-area": {
-    "src": "/images/previews/the-prescription-only-gray-area.webp",
     "width": 448,
     "height": 64
   },

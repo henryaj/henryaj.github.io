@@ -1,5 +1,11 @@
 [
   {
+    "title": "Building a better alcohol 2",
+    "url": "/building-a-better-alcohol-2/",
+    "date": "Aug 30",
+    "subtitle": "Previously I talked about how bad alcohol is as a drug. If a lack of bioavailable fun was a medical condition and we put alcohol through safety testing, it wouldn&#8217;t get past a phase 1 clinical trial."
+  },
+  {
     "title": "Living at the hinge of history",
     "url": "/living-at-the-hinge-of-history/",
     "date": "Aug 22",
@@ -22,11 +28,5 @@
     "url": "/the-prescription-only-gray-area/",
     "date": "Aug 2",
     "subtitle": "A love letter to United Pharmacies"
-  },
-  {
-    "title": "Cached identities",
-    "url": "/cached-identities/",
-    "date": "Jul 26",
-    "subtitle": "Against identity-based motivation"
   }
 ]
