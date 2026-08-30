@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Building a better alcohol 2"
-subtitle: "Previously I talked about how bad alcohol is as a drug. If a lack of bioavailable fun was a medical condition and we put alcohol through safety testing, it wouldn&#8217;t get past a phase 1 clinical trial."
+subtitle: "Increasing levels of bioavailable fun"
 date: 2026-08-30 10:41:15 +0000
 canonical_url: https://henryaj.substack.com/p/building-a-better-alcohol-2
 source: substack
