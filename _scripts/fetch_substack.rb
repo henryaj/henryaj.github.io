@@ -71,6 +71,13 @@ rescue StandardError => e
   {}
 end
 
+# The RSS description arrives with its entities still encoded (&#8217; and friends),
+# so it has to be decoded here or the homepage escapes the ampersand and prints the
+# entity itself. Numeric refs are what Substack emits; CGI covers those.
+def subtitle_text(description)
+  CGI.unescapeHTML(description.to_s).gsub(/\s+/, ' ').strip
+end
+
 def slug_from_url(url)
   # https://henryaj.substack.com/p/some-post-title -> some-post-title
   url.split('/p/').last.split('?').first
@@ -582,7 +589,7 @@ feed.items.sort_by { |item| item.pubDate }.reverse.each do |item|
       title: item.title,
       url: local_url,
       date: item.pubDate.strftime('%b %-d'),
-      subtitle: item.description.to_s.gsub(/\s+/, ' ').strip
+      subtitle: subtitle_text(item.description)
     }
   end
 
@@ -597,7 +604,7 @@ feed.items.sort_by { |item| item.pubDate }.reverse.each do |item|
   # Escape YAML-unsafe characters in title
   safe_title = item.title.gsub('"', '\\"')
   # The RSS description is the Substack subtitle; the homepage sets it under each entry.
-  safe_subtitle = item.description.to_s.gsub(/\s+/, ' ').strip.gsub('"', '\\"')
+  safe_subtitle = subtitle_text(item.description).gsub('"', '\\"')
 
   frontmatter = <<~YAML
     ---
