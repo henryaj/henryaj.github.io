@@ -1,4 +1,48 @@
 {
+  "the-loop-closes": [
+    {
+      "name": "David Mears",
+      "date": "6 Sep 2026",
+      "datetime": "2026-09-06T17:52:05.927Z",
+      "depth": 0,
+      "reactions": 0,
+      "html": "<p>What’s your emotional reaction to this?</p>"
+    }
+  ],
+  "building-a-better-alcohol-2": [
+    {
+      "name": "heliamphoria",
+      "date": "30 Aug 2026",
+      "datetime": "2026-08-30T22:35:06.168Z",
+      "depth": 0,
+      "reactions": 0,
+      "html": "<p>fascinating! although my understanding of all the recent articles about the health effects of moderate drinking is that even a drink a day only shortens one’s life by mere months. it’s still poison, of course, but even roasting vegetables instead of boiling them is technically more carcinogenic, so i don’t think that’s nearly as strong of an argument against building a “better alcohol” as all the others you listed here and in your first article.</p>"
+    },
+    {
+      "name": "quinoa marisa",
+      "date": "30 Aug 2026",
+      "datetime": "2026-08-30T23:14:25.609Z",
+      "depth": 0,
+      "reactions": 0,
+      "html": "<p>I&#39;ve taken memantine and n=1 but for me it doesn&#39;t feel fun. At 10mg/day it&#39;s totally not noticeable, at 20mg/day I feel woozy but not euphoric, like I&#39;m going to keel over all the time.</p><p>OTOH 400 mg of oral bioidentical progesterone *does* basically make me feel drunk for a few hours without the hangover!</p><p>Problems with prog:</p><p>- it&#39;s expensive, requires a prescription</p><p>- kind of a wildcard hormone and doesn&#39;t have consistent effects from person to person. side effects basically. can mess up the menstrual cycle.</p><p>- long story but from asking claude looks like there could be issues with GABA-A receptor adaptation if you do it too often.</p>"
+    },
+    {
+      "name": "Charles Pye",
+      "date": "31 Aug 2026",
+      "datetime": "2026-08-31T06:44:05.702Z",
+      "depth": 0,
+      "reactions": 1,
+      "html": "<p>I had a professor once. Very short, skinny, Korean man. In his 60s. Somehow he was able to drink like a fish, get totally wasted, and go back to work the next morning like nothing had happened. He said that he limited it to &quot;just once a week&quot; now, but when he was younger he used to do it 2 or 3 times a week.</p><p>My guess is that he must have been using something like this: <a href=\"https://www.theguardian.com/world/2025/sep/28/south-korea-hangover-cures-booming-market-traditional-novel-remedies-k-cure\" rel=\"nofollow ugc noopener\">https://www.theguardian.com/world/2025/sep/28/south-korea-hangover-cures-booming-market-traditional-novel-remedies-k-cure</a> But I don&#39;t know exactly what, or how it worked, or how he lived. But there is definitely a place for this sort of medicine to &quot;cure&quot; alcohol...</p>"
+    },
+    {
+      "name": "Henry Stanley",
+      "date": "6 Sep 2026",
+      "datetime": "2026-09-06T10:12:08.577Z",
+      "depth": 1,
+      "reactions": 0,
+      "html": "<p>Lactaid but for alcohol dehydrogenase... a man can dream</p>"
+    }
+  ],
   "living-at-the-hinge-of-history": [
     {
       "name": "Matt Ball",
@@ -23,7 +67,7 @@
       "date": "16 Aug 2026",
       "datetime": "2026-08-16T11:45:55.669Z",
       "depth": 0,
-      "reactions": 10,
+      "reactions": 11,
       "html": "<p>“Man has an infinite capacity to rationalize — especially when it comes to what he wants to eat.”</p><p>-Cleveland Amory</p><p>To your subhead, the more important question, IMO, is: Why does nearly everyone who goes vegan go back to eating animals?</p>"
     },
     {
@@ -951,6 +995,32 @@
       "depth": 0,
       "reactions": 1,
       "html": "<p>Thanks! Have crossposted.</p><p>As I understand it the funding need comes from a bunch of big donors falling through, leaving certain projects at risk of failure – for example their appeal against their court defeat against Defra [<a href=\"https://www.advocates-for-animals.com/post/humane-league-uk-r-on-the-application-of-v-secretary-of-state-for-environment-food-and-rural-aff#:~:text=Advocates%20for%20Animals%20acted%20for,bred%20for%20meat%20(broilers)\" rel=\"nofollow ugc noopener\">https://www.advocates-for-animals.com/post/humane-league-uk-r-on-the-application-of-v-secretary-of-state-for-environment-food-and-rural-aff#:~:text=Advocates%20for%20Animals%20acted%20for,bred%20for%20meat%20(broilers)</a>.]</p>"
+    }
+  ],
+  "fixing-eye-floaters-with-bromelain": [
+    {
+      "name": "BlackSheep",
+      "date": "30 Aug 2026",
+      "datetime": "2026-08-30T15:16:06.672Z",
+      "depth": 0,
+      "reactions": 0,
+      "html": "<p>I have translucent floaters from vitreous detachments, and I&#39;d like to try to replicate the study with bromelain, papain and ficin, but will need to find a papain supplement to achieve proper ratio, which seems possible, but I&#39;m not finding a like extract ficin supplement anywhere.</p><p>There&#39;s also, as with all supplements, the question of whether the dosages are referring to a bulk source amount or the final usable amount. Does one, for example, need to take 1000 mg of bulk bromelain to get 190 mg of the usable enzyme, or take 190 mg of the bulk source?</p>"
+    },
+    {
+      "name": "Henry Stanley",
+      "date": "30 Aug 2026",
+      "datetime": "2026-08-30T21:58:03.714Z",
+      "depth": 1,
+      "reactions": 1,
+      "html": "<p>Honestly I don&#39;t really endorse this post any more (and should probably edit it to say so) - I think the mechanism for bromelain actually working here is pretty implausble. FWIW I tried it myself and didn&#39;t notice any benefit. Sorry :(</p>"
+    },
+    {
+      "name": "BlackSheep",
+      "date": "2 Sep 2026",
+      "datetime": "2026-09-02T14:26:37.710Z",
+      "depth": 2,
+      "reactions": 1,
+      "html": "<p>No sweat. It was worth a shot.</p>"
     }
   ]
 }

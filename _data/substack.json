@@ -1,5 +1,11 @@
 [
   {
+    "title": "The loop closes",
+    "url": "/the-loop-closes/",
+    "date": "Sep 6",
+    "subtitle": "What&#8217;s left for humans to do?"
+  },
+  {
     "title": "Building a better alcohol 2",
     "url": "/building-a-better-alcohol-2/",
     "date": "Aug 30",
@@ -22,11 +28,5 @@
     "url": "/the-sloppification-of-peptides/",
     "date": "Aug 9",
     "subtitle": "Nobody in the comments is real"
-  },
-  {
-    "title": "The \"prescription-only\" gray area",
-    "url": "/the-prescription-only-gray-area/",
-    "date": "Aug 2",
-    "subtitle": "A love letter to United Pharmacies"
   }
 ]
