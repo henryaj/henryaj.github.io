@@ -10,7 +10,7 @@ url: "https://www.henrystanley.com"
 # off and go back to five recent. The value is the post's permalink, and it also
 # tells _scripts/build_previews.rb which posts are on show, so re-run `just previews`
 # after changing it.
-pinned_post: "/dont-screw-the-crew/"
+pinned_post: ""
 
 markdown: kramdown
 

@@ -4,11 +4,6 @@
     "width": 448,
     "height": 64
   },
-  "dont-screw-the-crew": {
-    "src": "/images/previews/dont-screw-the-crew.webp",
-    "width": 448,
-    "height": 64
-  },
   "living-at-the-hinge-of-history": {
     "src": "/images/previews/living-at-the-hinge-of-history.webp",
     "width": 448,
@@ -16,6 +11,11 @@
   },
   "the-loop-closes": {
     "src": "/images/previews/the-loop-closes.webp",
+    "width": 448,
+    "height": 64
+  },
+  "the-sloppification-of-peptides": {
+    "src": "/images/previews/the-sloppification-of-peptides.webp",
     "width": 448,
     "height": 64
   },
