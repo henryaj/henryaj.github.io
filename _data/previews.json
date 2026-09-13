@@ -1,4 +1,9 @@
 {
+  "ai-comes-for-the-nerds": {
+    "src": "/images/previews/ai-comes-for-the-nerds.webp",
+    "width": 448,
+    "height": 64
+  },
   "building-a-better-alcohol-2": {
     "src": "/images/previews/building-a-better-alcohol-2.webp",
     "width": 448,
@@ -11,11 +16,6 @@
   },
   "the-loop-closes": {
     "src": "/images/previews/the-loop-closes.webp",
-    "width": 448,
-    "height": 64
-  },
-  "the-sloppification-of-peptides": {
-    "src": "/images/previews/the-sloppification-of-peptides.webp",
     "width": 448,
     "height": 64
   },

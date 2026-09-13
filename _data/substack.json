@@ -1,5 +1,11 @@
 [
   {
+    "title": "AI comes for the nerds",
+    "url": "/ai-comes-for-the-nerds/",
+    "date": "Sep 12",
+    "subtitle": "Short timelines, soft takeoff"
+  },
+  {
     "title": "The loop closes",
     "url": "/the-loop-closes/",
     "date": "Sep 6",
@@ -22,11 +28,5 @@
     "url": "/why-do-smart-people-get-oneshotted/",
     "date": "Aug 16",
     "subtitle": "Maybe they need more protein"
-  },
-  {
-    "title": "The sloppification of peptides",
-    "url": "/the-sloppification-of-peptides/",
-    "date": "Aug 9",
-    "subtitle": "Nobody in the comments is real"
   }
 ]
