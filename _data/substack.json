@@ -1,5 +1,11 @@
 [
   {
+    "title": "Effective altruism in the news",
+    "url": "/effective-altruism-in-the-news/",
+    "date": "Sep 20",
+    "subtitle": "The little movement that could"
+  },
+  {
     "title": "AI comes for the nerds",
     "url": "/ai-comes-for-the-nerds/",
     "date": "Sep 12",
@@ -22,11 +28,5 @@
     "url": "/living-at-the-hinge-of-history/",
     "date": "Aug 22",
     "subtitle": "It's an insane time to be alive"
-  },
-  {
-    "title": "Why do smart people get oneshotted by animal welfare?",
-    "url": "/why-do-smart-people-get-oneshotted/",
-    "date": "Aug 16",
-    "subtitle": "Maybe they need more protein"
   }
 ]

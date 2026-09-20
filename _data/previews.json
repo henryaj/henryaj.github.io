@@ -9,6 +9,11 @@
     "width": 448,
     "height": 64
   },
+  "effective-altruism-in-the-news": {
+    "src": "/images/previews/effective-altruism-in-the-news.webp",
+    "width": 448,
+    "height": 64
+  },
   "living-at-the-hinge-of-history": {
     "src": "/images/previews/living-at-the-hinge-of-history.webp",
     "width": 448,
@@ -16,11 +21,6 @@
   },
   "the-loop-closes": {
     "src": "/images/previews/the-loop-closes.webp",
-    "width": 448,
-    "height": 64
-  },
-  "why-do-smart-people-get-oneshotted": {
-    "src": "/images/previews/why-do-smart-people-get-oneshotted.webp",
     "width": 448,
     "height": 64
   }
