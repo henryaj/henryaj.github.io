@@ -2,6 +2,8 @@
 layout: post
 title: "AI comes for the nerds"
 subtitle: "Short timelines, soft takeoff"
+# attention takes the coat and the crowd; take his face and the pointing hand.
+preview_crop: 0.23
 date: 2026-09-12 21:14:20 +0000
 canonical_url: https://henryaj.substack.com/p/ai-comes-for-the-nerds
 source: substack

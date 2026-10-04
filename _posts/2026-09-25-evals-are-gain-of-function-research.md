@@ -2,6 +2,8 @@
 layout: post
 title: "Evals are gain-of-function research"
 subtitle: "Stress-testing frontier AI in leaky labs"
+# attention takes the shoulders; the horns are what make it a minotaur.
+preview_crop: 0.3
 date: 2026-09-25 14:19:52 +0000
 canonical_url: https://henryaj.substack.com/p/evals-are-gain-of-function-research
 source: substack
