@@ -1,5 +1,11 @@
 [
   {
+    "title": "Magic spells",
+    "url": "/magic-spells/",
+    "date": "Oct 4",
+    "subtitle": "You can change your life in an instant"
+  },
+  {
     "title": "Evals are gain-of-function research",
     "url": "/evals-are-gain-of-function-research/",
     "date": "Sep 25",
@@ -22,11 +28,5 @@
     "url": "/the-loop-closes/",
     "date": "Sep 6",
     "subtitle": "What’s left for humans to do?"
-  },
-  {
-    "title": "Building a better alcohol 2",
-    "url": "/building-a-better-alcohol-2/",
-    "date": "Aug 30",
-    "subtitle": "Increasing levels of bioavailable fun"
   }
 ]

@@ -4,11 +4,6 @@
     "width": 448,
     "height": 64
   },
-  "building-a-better-alcohol-2": {
-    "src": "/images/previews/building-a-better-alcohol-2.webp",
-    "width": 448,
-    "height": 64
-  },
   "effective-altruism-in-the-news": {
     "src": "/images/previews/effective-altruism-in-the-news.webp",
     "width": 448,
@@ -16,6 +11,11 @@
   },
   "evals-are-gain-of-function-research": {
     "src": "/images/previews/evals-are-gain-of-function-research.webp",
+    "width": 448,
+    "height": 64
+  },
+  "magic-spells": {
+    "src": "/images/previews/magic-spells.webp",
     "width": 448,
     "height": 64
   },
