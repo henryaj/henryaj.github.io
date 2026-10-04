@@ -2,6 +2,8 @@
 layout: post
 title: "The loop closes"
 subtitle: "What’s left for humans to do?"
+# attention takes the oxen legs; take the king under his canopy.
+preview_crop: 0.3
 date: 2026-09-06 17:46:21 +0000
 canonical_url: https://henryaj.substack.com/p/the-loop-closes
 source: substack

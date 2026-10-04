@@ -2,6 +2,8 @@
 layout: post
 title: "Magic spells"
 subtitle: "You can change your life in an instant"
+# attention takes her sash and the steam; take her profile instead.
+preview_crop: 0.2
 date: 2026-10-04 14:33:49 +0000
 canonical_url: https://henryaj.substack.com/p/magic-spells
 source: substack
