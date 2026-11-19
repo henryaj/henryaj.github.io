@@ -1,5 +1,11 @@
 [
   {
+    "title": "Boring",
+    "url": "/boring/",
+    "date": "Nov 18",
+    "subtitle": "An idiot in Berkeley"
+  },
+  {
     "title": "Magic spells",
     "url": "/magic-spells/",
     "date": "Oct 4",
@@ -22,11 +28,5 @@
     "url": "/ai-comes-for-the-nerds/",
     "date": "Sep 12",
     "subtitle": "Short timelines, soft takeoff"
-  },
-  {
-    "title": "The loop closes",
-    "url": "/the-loop-closes/",
-    "date": "Sep 6",
-    "subtitle": "What’s left for humans to do?"
   }
 ]

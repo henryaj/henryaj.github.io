@@ -4,6 +4,11 @@
     "width": 448,
     "height": 64
   },
+  "boring": {
+    "src": "/images/previews/boring.webp",
+    "width": 448,
+    "height": 64
+  },
   "effective-altruism-in-the-news": {
     "src": "/images/previews/effective-altruism-in-the-news.webp",
     "width": 448,
@@ -16,11 +21,6 @@
   },
   "magic-spells": {
     "src": "/images/previews/magic-spells.webp",
-    "width": 448,
-    "height": 64
-  },
-  "the-loop-closes": {
-    "src": "/images/previews/the-loop-closes.webp",
     "width": 448,
     "height": 64
   }
