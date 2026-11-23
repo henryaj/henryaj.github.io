@@ -3,9 +3,12 @@ layout: default
 title: "Review: The Collected Poetry of Billy the Kid"
 permalink: /billykid/
 nav: false
+author: Alec Thompson
 ---
 
 # Review: The Collected Poetry of Billy the Kid
+
+<div class="meta">By {{ page.author }}</div>
 
 <figure><img src="/images/billykid.jpg" alt="Book cover: a painted portrait of Billy the Kid in a wide-brimmed hat" width="298" height="447"></figure>
 

@@ -24,7 +24,7 @@
 {%- endunless -%}
 
   <meta name="description" content="{{ meta_description | xml_escape }}">
-  <meta name="author" content="{{ site.author.name }}">
+  <meta name="author" content="{{ page.author | default: site.author.name }}">
   <meta property="og:site_name" content="{{ site.title | xml_escape }}">
   <meta property="og:title" content="{{ page.title | default: site.title | xml_escape }}">
   <meta property="og:description" content="{{ meta_description | xml_escape }}">
