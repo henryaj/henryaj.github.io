@@ -1,4 +1,7 @@
 {%- assign meta_description = page.subtitle | default: page.description -%}
+{%- if page.author and meta_description == nil -%}
+  {%- assign meta_description = "By " | append: page.author -%}
+{%- endif -%}
 {%- if page.layout == 'post' and meta_description == nil -%}
   {%- assign meta_paras = page.content | split: '<p>' -%}
   {%- if meta_paras.size > 1 -%}
