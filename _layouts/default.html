@@ -301,10 +301,12 @@
   </style>
 </head>
 <body>
+  {% unless page.nav == false %}
   <nav class="site-nav">
     <a href="/">Henry Stanley</a>
     <a href="/writing">Writing</a>
   </nav>
+  {% endunless %}
 
   {{ content }}
 

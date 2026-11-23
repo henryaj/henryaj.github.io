@@ -2,6 +2,7 @@
 layout: default
 title: "Review: The Collected Poetry of Billy the Kid"
 permalink: /billykid/
+nav: false
 ---
 
 # Review: The Collected Poetry of Billy the Kid
