@@ -1,5 +1,11 @@
 [
   {
+    "title": "Transport should be way more dangerous",
+    "url": "/transport-should-be-way-more-dangerous/",
+    "date": "Nov 22",
+    "subtitle": "2 Bus 2 Furious"
+  },
+  {
     "title": "Boring",
     "url": "/boring/",
     "date": "Nov 18",
@@ -22,11 +28,5 @@
     "url": "/effective-altruism-in-the-news/",
     "date": "Sep 20",
     "subtitle": "The little movement that could"
-  },
-  {
-    "title": "AI comes for the nerds",
-    "url": "/ai-comes-for-the-nerds/",
-    "date": "Sep 12",
-    "subtitle": "Short timelines, soft takeoff"
   }
 ]
