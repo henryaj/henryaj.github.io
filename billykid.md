@@ -7,6 +7,8 @@ nav: false
 
 # Review: The Collected Poetry of Billy the Kid
 
+<figure><img src="/images/billykid.jpg" alt="Book cover: a painted portrait of Billy the Kid in a wide-brimmed hat" width="298" height="447"></figure>
+
 I needed a bath after reading this book; it is the poetry accompaniment to *The Revenant* and *Blood Meridian.* Billy the Kid becomes sympathetic and human; at the same time, gross, cruel, and inhuman. What I like about the Western is its pretensions to universality: the southern cadence just makes things more... *significant.* The lone gunman is The Individual, the malignant Judge is *Literally The Devil,* and the depravity of the dogbreeder in collected poetry somehow transcends -- or descends -- into a kind of special and timeless hell.
 
 It reminds me of competitions over who lives in rock bottom. Somewhere out there exists a place so depraved, so harsh, so cruel and unforgiving, that the people forged in it are superhuman, inhuman, monstrous. Their lived experience sufficiently extreme as to blast away the morals of everyday life in every moment big and small. A group who can be placed in any situation and will survive. Will dominate or kill. Cannot be reasoned with. Cannot be intimidated. Have nothing to lose and no human normality. Who might behave crazily and kill you for no reason. They are the lone man on the bridge, the threat in the distance, the fear of impending confrontation from the random interloper. The thing in the bushes. The blank threat which is capable of potentially anything.
