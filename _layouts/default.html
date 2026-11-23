@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>
-    {% if page.title == "Home" %}{{ site.title }}{% else %}{{ page.title }} — {{ site.title }}{% endif %}
+    {% if page.title == "Home" %}{{ site.title }}{% else %}{{ page.title }} — {{ page.author | default: site.title }}{% endif %}
   </title>
   {% if page.canonical_url %}
   <link rel="canonical" href="{{ page.canonical_url }}">
